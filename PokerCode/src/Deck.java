@@ -1,8 +1,12 @@
+/*
+Creates an ArrayList of Card objects
+ */
 import java.util.ArrayList;
 
 public class Deck {
-    ArrayList<Card> cardDeck;
+    private ArrayList<Card> cardDeck;
     public Deck() {
+        //Initializes the deck
         String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
          cardDeck= new ArrayList<Card>();
@@ -36,7 +40,8 @@ public class Deck {
         }
         return cardsDealt;
     }
-    //Prints out the deck. For testing purposes only
+
+    //Prints out the deck. For testing purposes only, we obviously don't want people to see what cards are in the deck.
     public String toString() {
         String deckString = "";
         for(Card card:cardDeck) {
