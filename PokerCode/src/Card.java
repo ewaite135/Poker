@@ -1,4 +1,4 @@
-public class Card {
+public class Card implements Comparable<Card>{
     private int cardVal; //just to determine which card is higher. This value ranges from 0 (a 2) to 12 (an ace)
     private String cardName;
     private Suit suit;
@@ -29,5 +29,12 @@ public class Card {
 
     public String toString() {
         return cardName.toUpperCase() + " of " + suit + "S";
+    }
+
+    //We use this comparable method to sort the hands from lowest number to highest (2 to king to ace).
+    //This just returns the cardVal.
+    //This allows us to sort out hands to more easily see if we have straights or pairs, etc.
+    public int compareTo(Card otherCard) {
+        return cardVal - otherCard.getCardVal();
     }
 }

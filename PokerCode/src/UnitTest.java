@@ -33,5 +33,10 @@ public class UnitTest {
         System.out.println();
         System.out.println(myDeck);
          */
+        Deck myDeck2 = new Deck();
+        myDeck2.shuffleDeck();
+        Hand myHand = new Hand(myDeck2.dealCards(3));
+        System.out.println(myHand);
+        System.out.println(myHand);
     }
 }

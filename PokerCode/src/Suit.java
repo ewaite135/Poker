@@ -3,8 +3,18 @@ An enum is basically like a variable but it only has a certain number of states,
 summer, fall, winter or spring.
  */
 public enum Suit {
-    DIAMOND,
-    HEART,
-    SPADE,
-    CLUB
+    DIAMOND {
+        public int getSuitAsInt() { return 0; }
+    },
+    HEART {
+        public int getSuitAsInt() { return 1; }
+    },
+    SPADE {
+        public int getSuitAsInt() { return 2; }
+    },
+    CLUB {
+        public int getSuitAsInt() { return 3; }
+    };
+
+    public abstract int getSuitAsInt();
 }
