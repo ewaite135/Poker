@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Hand implements Comparable<Hand>{
-    private ArrayList<Card> hand;
+    public ArrayList<Card> hand;
     //All cards represent the list of all cards on the board and in the hand.
-    private ArrayList<Card> allCards;
+    public ArrayList<Card> allCards;
 
     //Initializes an empty hand
     public Hand() {
@@ -232,6 +232,10 @@ public class Hand implements Comparable<Hand>{
             output += hand.get(i) + ", ";
         }
         return output;
+    }
+
+    public int getAllCardSize() {
+        return allCards.size();
     }
 
     //Evaluates which hand is better.
