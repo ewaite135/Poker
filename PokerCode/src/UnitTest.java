@@ -35,8 +35,8 @@ public class UnitTest {
          */
         Deck myDeck2 = new Deck();
         myDeck2.shuffleDeck();
-        Hand myHand = new Hand(myDeck2.dealCards(3));
+        Hand myHand = new Hand(myDeck2.dealCards(5));
         System.out.println(myHand);
-        System.out.println(myHand);
+        System.out.println("This hand has an evaluation of: " + HandEval.evalHand(myHand));
     }
 }

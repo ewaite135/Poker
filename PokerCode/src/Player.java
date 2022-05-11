@@ -1,5 +1,8 @@
 import java.util.ArrayList;
-
+/*
+Represents a player, with a hand and the ability to bet.
+Need to integrate the betting with the board class.
+ */
 public class Player {
     boolean isTurn;
     int chips;
