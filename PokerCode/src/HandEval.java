@@ -24,22 +24,24 @@ public class HandEval {
     }
 
     //Turns a hand into an array of counts counting the times each number appears in the hand.
-    private static int[] initializeCardCounter(Hand newHand) {
+    private static int[] initializeCardCounter(ArrayList<Card> cardList) {
         int[] cardCounter = new int[13];
-        for(int i = 0; i < newHand.getAllCardSize(); i++) {
-            cardCounter[newHand.allCards.get(i).getCardVal()]++;
+        for(int i = 0; i < cardList.size(); i++) {
+            cardCounter[cardList.get(i).getCardVal()]++;
         }
         return cardCounter;
     }
 
-    public static double evalHand(Hand hand) {
-        int[] cardCounter  = initializeCardCounter(hand);
-        if((isHandFlush(hand)[0] > -1) && isHandStraight(cardCounter) == 12) {
+    public static double evalHand(Hand handCards, ArrayList<Card> commCards) {
+        ArrayList<Card> allCards = handCards.hand;
+        allCards.addAll(commCards);
+        int[] cardCounter  = initializeCardCounter(allCards);
+        if((isHandFlush(allCards)[0] > -1) && isHandStraight(cardCounter) == 12) {
             //Royal flush
             //No tiebreakers
             System.out.println("Royal Flush!");
             return calculateHandValue(HandType.ROYAL_FLUSH);
-        } else if(isHandFlush(hand)[0] > -1 && isHandStraight(cardCounter) >= -1) {
+        } else if(isHandFlush(handCards)[0] > -1 && isHandStraight(cardCounter) >= -1) {
             //Straight Flush
             //First tiebreaker: the highest card in the straight
             System.out.println("Straight Flush");
@@ -61,8 +63,8 @@ public class HandEval {
             System.out.println("The three of a kind is " + fullHouseArray[0]);
             System.out.println("The pair is " + fullHouseArray[1]);
             return calculateHandValue(HandType.FULL_HOUSE, isFullHouse(cardCounter)[0], isFullHouse(cardCounter)[1]);
-        } else if(isHandFlush(hand)[0] > -1) {
-            int[] flushNums = isHandFlush(hand);
+        } else if(isHandFlush(handCards)[0] > -1) {
+            int[] flushNums = isHandFlush(handCards);
             //Flush
             //First tie breaker: the highest card in the flush
             //Second tie breaker: the second highest card in the flush
@@ -101,44 +103,33 @@ public class HandEval {
         }
     }
 
-    //Calculates whether the hand is a flush or not. Returns integers to match all the other methods.
-    private static int[] isHandFlush(Hand currHand) {
-        //flushNums is an array of the card values that make up the flush (for tiebreaking purposes)
-        int[] flushNums = {-1, -1, -1, -1, -1};
-        //suitCounter counts the number of times each suit appears
-        int[] suitCounter = new int[4];
-        for(int i = 0; i < currHand.getAllCardSize(); i++) {
-            suitCounter[currHand.allCards.get(i).getSuit().getSuitAsInt()]++;
+    private static void isHandFlush(ArrayList<Card> cardList) {
+        int[] suitsCounter = new int[4];
+        for(Card card: cardList) {
+            suitsCounter[card.getSuit().getSuitAsInt()];
         }
-        for(int suitInt = 0; suitInt < 4; suitInt++) {
-            if (suitCounter[suitInt] >= 5) { //If a straight is found
-                Collections.sort(currHand.allCards);
-                Suit suitOfFlush = intToSuit(suitInt);
-                int numInFlush = 0;
-                for(int i = currHand.allCards.size() - 1; i >= 0; i--) {//for each card in the array
-                    if(currHand.allCards.get(i).getSuit() == suitOfFlush) {//if that card is in the straight
-                        flushNums[numInFlush] = currHand.allCards.get(i).getCardVal();//add that card value to flushNums
-                    }
-                }
-                return flushNums;
-            }
-        }
-        return flushNums;
+        if()
     }
 
     //Tests if it is a straight or not based on the array of counts of card numbers
     //returns the highest number of the straight if it is a straight, returns -1 if not a straight
     private static int isHandStraight(int[] countArray) {
-        for(int i = 0; i < 9; i++) {
+        for(int i = 0; i < countArray.length - 4; i++) {
             boolean currentlyStraight = true;
             for(int j = 0; j < 5; j++) {
                 if (countArray[i + j] < 1) {
+                    System.out.println("There is no "+ (i+j) + ", so the straight is ended");
                     currentlyStraight = false;
+                } else {
+                    System.out.println("There is a " + (i + j) + ", so the straight continues");
                 }
             }
             if(currentlyStraight) {
+                System.out.println("There is a straight, starting at " + i + "and ending at " + (i+4));
                 //returns the highest value of the straight
                 return (i + 4);
+            } else {
+                System.out.println("New Straight test, starting at " + i);
             }
         }
         return -1;
@@ -207,11 +198,11 @@ public class HandEval {
         return fullHouseArray;
     }
 
-    private static int[] handIntoArray(Hand newHand) {
-        int[] cardArray = new int[newHand.allCards.size()];
-        Collections.sort(newHand.allCards);
-        for(int i = 0; i < newHand.allCards.size(); i++) {
-            cardArray[i] = newHand.allCards.get(i).getCardVal();
+    private static int[] handIntoArray(ArrayList<Card> cardList) {
+        int[] cardArray = new int[cardList.size()];
+        Collections.sort(cardList);
+        for(int i = 0; i < cardList.size(); i++) {
+            cardArray[i] = cardList.get(i).getCardVal();
         }
         return cardArray;
     }
