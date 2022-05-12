@@ -3,6 +3,7 @@ import java.util.Collections;
 
 public class Hand implements Comparable<Hand>{
     public ArrayList<Card> hand;
+    public ArrayList<Card> boardCards;
     //All cards represent the list of all cards on the board and in the hand.
     public ArrayList<Card> allCards;
 
@@ -10,30 +11,35 @@ public class Hand implements Comparable<Hand>{
     public Hand() {
         hand = new ArrayList<Card>();
         allCards = new ArrayList<Card>();
+        boardCards = new ArrayList<Card>();
     }
 
     //Initializes a hand with an arraylist of cards (from the deal method).
-    public Hand(ArrayList<Card> cardArrayList) {
+    public Hand(ArrayList<Card> handCardArrayList) {
         hand = new ArrayList<Card>();
-        hand.addAll(cardArrayList);
+        hand.addAll(handCardArrayList);
+        boardCards = new ArrayList<Card>();
         allCards = new ArrayList<Card>();
         allCards.addAll(hand);
     }
 
-    public void addCards(ArrayList<Card> cardsDealt) {
+    public void addCardsToHand(ArrayList<Card> cardsDealt) {
         hand.addAll(cardsDealt);
         allCards.addAll(cardsDealt);
     }
 
     public void resetHand() {
-        allCards.removeAll(hand);
+        allCards.clear();
         hand.clear();
+        boardCards.clear();
     }
 
     //resets the allCards arrayList with all the cards on the board and in the hand
     public void updateCardsOnBoard(ArrayList<Card> cardsOnBoard) {
+        boardCards.clear();
+        boardCards.addAll(cardsOnBoard);
         allCards.clear();
-        allCards.addAll(cardsOnBoard);
+        allCards.addAll(boardCards);
         allCards.addAll(hand);
     }
 
@@ -49,8 +55,13 @@ public class Hand implements Comparable<Hand>{
         return allCards.size();
     }
 
+    public double getHandVal(){
+        return HandEval.evalHand(hand, boardCards);
+    }
+
     //Evaluates which hand is better.
     public int compareTo(Hand otherHand) {
-        return (int) Math.signum(HandEval.evalHand(this) - HandEval.evalHand(this));
+        double otherHandVal = HandEval.evalHand(otherHand.hand, otherHand.boardCards);
+        return (int) Math.signum(getHandVal() - otherHandVal);
     }
 }

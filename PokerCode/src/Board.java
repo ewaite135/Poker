@@ -13,7 +13,7 @@ public class Board {
         chipPot = 0;
     }
 
-    public void addCards (ArrayList<Card> newCards) {
+    public void addCards(ArrayList<Card> newCards) {
         commCards.addAll(newCards);
     }
 
@@ -38,5 +38,13 @@ public class Board {
 
     public void addChipsToPot(int chips) {
         chipPot += chips;
+    }
+
+    public String toString() {
+        String output = "";
+        for(int i = 0; i < commCards.size(); i++) {
+            output += commCards.get(i) + ", ";
+        }
+        return output;
     }
 }

@@ -16,7 +16,7 @@ public class Player {
 
     //adds cards dealt to a player's hand
     public void dealCards(ArrayList<Card> cardsDealt) {
-        playerHand.addCards(cardsDealt);
+        playerHand.addCardsToHand(cardsDealt);
     }
 
     public void addChips(int newChips) {

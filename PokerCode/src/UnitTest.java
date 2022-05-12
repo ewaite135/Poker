@@ -33,10 +33,35 @@ public class UnitTest {
         System.out.println();
         System.out.println(myDeck);
          */
+        /*
         Deck myDeck2 = new Deck();
         myDeck2.shuffleDeck();
-        Hand myHand = new Hand(myDeck2.dealCards(5));
-        System.out.println(myHand);
-        System.out.println("This hand has an evaluation of: " + HandEval.evalHand(myHand));
+        Hand myHand = new Hand(myDeck2.dealCards(2));
+        //System.out.println("Your hand is: " + myHand);
+        Board board = new Board();
+        board.addCards(myDeck2.dealCards(3));
+        //System.out.println("The board is: " + board);
+        myHand.updateCardsOnBoard(board.getCards());
+        System.out.println("This hand has an evaluation of: " + myHand.getHandVal());
+        */
+        //Testing out a straight
+        Hand hand2 = new Hand();
+        Board board2 = new Board();
+        Card TwoOfSpades = new Card("2", Suit.SPADE);
+        Card ThreeOfSpades = new Card("3", Suit.SPADE);
+        Card FiveOfSpades = new Card("5", Suit.SPADE);
+        Card FourOfSpades = new Card("4", Suit.SPADE);
+        Card SixOfSpades = new Card("6", Suit.SPADE);
+        ArrayList<Card> testHandList = new ArrayList<Card>();
+        testHandList.add(TwoOfSpades);
+        testHandList.add(ThreeOfSpades);
+        hand2.addCardsToHand(testHandList);
+        ArrayList<Card> testBoardList = new ArrayList<Card>();
+        testBoardList.add(FiveOfSpades);
+        testBoardList.add(SixOfSpades);
+        testBoardList.add(FourOfSpades);
+        board2.addCards(testBoardList);
+        hand2.updateCardsOnBoard(board2.getCards());
+        System.out.println("This hand has an evaluation of: " + hand2.getHandVal());
     }
 }

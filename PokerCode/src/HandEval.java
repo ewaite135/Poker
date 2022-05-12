@@ -1,28 +1,8 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class HandEval {
-    //here, hand refers to all the cards in the board and the hand.
-    private static ArrayList<Card> boardCards = new ArrayList<Card>();
-    private static ArrayList<Card> handCards = new ArrayList<Card>();
-    private static ArrayList<Card> allCards = new ArrayList<Card>();
-
-    public static void updateHandCards(ArrayList<Card> newHand) {
-        handCards.clear();
-        handCards.addAll(newHand);
-        allCards.clear();
-        allCards.addAll(handCards);
-        allCards.addAll(boardCards);
-    }
-
-    public static void updateBoardCards(ArrayList<Card> newHand) {
-        boardCards.clear();
-        boardCards.addAll(newHand);
-        allCards.clear();
-        allCards.addAll(handCards);
-        allCards.addAll(boardCards);
-    }
-
     //Turns a hand into an array of counts counting the times each number appears in the hand.
     private static int[] initializeCardCounter(ArrayList<Card> cardList) {
         int[] cardCounter = new int[13];
@@ -32,16 +12,25 @@ public class HandEval {
         return cardCounter;
     }
 
-    public static double evalHand(Hand handCards, ArrayList<Card> commCards) {
-        ArrayList<Card> allCards = handCards.hand;
-        allCards.addAll(commCards);
+    public static double evalHand(ArrayList<Card> handCards, ArrayList<Card> commCards) {
+        ArrayList<Card> allCards = new ArrayList<Card>();
+        allCards.addAll(handCards);
+        if(commCards.size() > 0) {
+            allCards.addAll(commCards);
+        }
+        Collections.sort(handCards);
         int[] cardCounter  = initializeCardCounter(allCards);
-        if((isHandFlush(allCards)[0] > -1) && isHandStraight(cardCounter) == 12) {
+        //For testing
+        System.out.println("Card value counting array:");
+        System.out.println(Arrays.toString(cardCounter));
+        System.out.println("cards in hand: " + Utilities.printCardArrayList(handCards));
+        System.out.println("cards on board: " + Utilities.printCardArrayList(commCards));
+        if((isHandFlush(handCards, allCards) > -1) && (isHandStraight(cardCounter) == 12)) {
             //Royal flush
             //No tiebreakers
             System.out.println("Royal Flush!");
             return calculateHandValue(HandType.ROYAL_FLUSH);
-        } else if(isHandFlush(handCards)[0] > -1 && isHandStraight(cardCounter) >= -1) {
+        } else if(isHandFlush(handCards, allCards) > -1 && isHandStraight(cardCounter) > -1) {
             //Straight Flush
             //First tiebreaker: the highest card in the straight
             System.out.println("Straight Flush");
@@ -53,7 +42,7 @@ public class HandEval {
             //Second tie breaker: In case all 4 cards in four of a kind are on the board: the high card in the hand
             System.out.println("Four of a Kind!");
             return calculateHandValue(HandType.FOUR_OF_A_KIND, isFourOfAKind(cardCounter));
-        } else if(isFullHouse(cardCounter)[0] >= 0 && isFullHouse(cardCounter)[1] >= 0) {
+        } else if(isFullHouse(cardCounter)[0] > -1 && isFullHouse(cardCounter)[1] > -1) {
             //Full House
             //First tiebreaker: the value of the three of a kind
             //second tie breaker: the value of the pair
@@ -63,16 +52,13 @@ public class HandEval {
             System.out.println("The three of a kind is " + fullHouseArray[0]);
             System.out.println("The pair is " + fullHouseArray[1]);
             return calculateHandValue(HandType.FULL_HOUSE, isFullHouse(cardCounter)[0], isFullHouse(cardCounter)[1]);
-        } else if(isHandFlush(handCards)[0] > -1) {
-            int[] flushNums = isHandFlush(handCards);
+        } else if(isHandFlush(handCards, allCards) > -1) {
             //Flush
-            //First tie breaker: the highest card in the flush
-            //Second tie breaker: the second highest card in the flush
-            //Third tie breaker: the third highest card in the flush
+            //First tie breaker: the highest card in the flush in your hand
             //TODO: Possibly implement fourth and fifth tie breakers
             System.out.println("Flush!");
-            return calculateHandValue(HandType.FLUSH, flushNums[0], flushNums[1], flushNums[2]);
-        } else if(isHandStraight(cardCounter) >= -1) {
+            return calculateHandValue(HandType.FLUSH, isHandFlush(handCards, allCards));
+        } else if(isHandStraight(cardCounter) > -1) {
             //Straight
             //First tie breaker: The highest card of the straight.
             //I don't think there are any other tie breakers, but if you find any, please implement them.
@@ -94,21 +80,37 @@ public class HandEval {
             //One pair
             //First tie breaker: the value of the pair
             System.out.println("Pair!");
-            return calculateHandValue(HandType.PAIR, isPair(cardCounter));
+            return calculateHandValue(HandType.PAIR, isPair(cardCounter), handCards.get(1).getCardVal(),
+                    handCards.get(0).getCardVal());
         } else {
+            Collections.sort(handCards);
             //Just the highest card
-            //TODO: Figure out how to only look at the cards in the hand.
+            //The tiebreaker is the value of the highest card in the hand, the the value of the other card in the hand
             System.out.println("High Card!");
-            return calculateHandValue(HandType.HIGH_CARD);
+            return calculateHandValue(HandType.HIGH_CARD, handCards.get(1).getCardVal(), handCards.get(0).getCardVal());
         }
     }
 
-    private static void isHandFlush(ArrayList<Card> cardList) {
+    private static int isHandFlush(ArrayList<Card> handCards, ArrayList<Card> allCards) {
+        int highFlushCardInHand = -1;
         int[] suitsCounter = new int[4];
-        for(Card card: cardList) {
-            suitsCounter[card.getSuit().getSuitAsInt()];
+        for(Card card: allCards) {
+            suitsCounter[card.getSuit().getSuitAsInt()]++;
         }
-        if()
+        Suit flushSuit;
+        for(int suitIndex = 0; suitIndex < 4; suitIndex++) {
+            if (suitsCounter[suitIndex] >= 5) {
+                //It's a flush. Sets the suit of the flush
+                flushSuit = intToSuit(suitIndex);
+                if(handCards.get(0).getSuit() == flushSuit) {
+                    highFlushCardInHand = handCards.get(0).getCardVal();
+                }
+                if(handCards.get(1).getSuit() == flushSuit ) {
+                    highFlushCardInHand = Math.max(highFlushCardInHand, handCards.get(1).getCardVal());
+                }
+            }
+        }
+        return highFlushCardInHand;
     }
 
     //Tests if it is a straight or not based on the array of counts of card numbers
@@ -118,18 +120,11 @@ public class HandEval {
             boolean currentlyStraight = true;
             for(int j = 0; j < 5; j++) {
                 if (countArray[i + j] < 1) {
-                    System.out.println("There is no "+ (i+j) + ", so the straight is ended");
                     currentlyStraight = false;
-                } else {
-                    System.out.println("There is a " + (i + j) + ", so the straight continues");
                 }
             }
             if(currentlyStraight) {
-                System.out.println("There is a straight, starting at " + i + "and ending at " + (i+4));
-                //returns the highest value of the straight
                 return (i + 4);
-            } else {
-                System.out.println("New Straight test, starting at " + i);
             }
         }
         return -1;
@@ -196,15 +191,6 @@ public class HandEval {
             fullHouseArray[0] = -1;
         }
         return fullHouseArray;
-    }
-
-    private static int[] handIntoArray(ArrayList<Card> cardList) {
-        int[] cardArray = new int[cardList.size()];
-        Collections.sort(cardList);
-        for(int i = 0; i < cardList.size(); i++) {
-            cardArray[i] = cardList.get(i).getCardVal();
-        }
-        return cardArray;
     }
 
     private static Suit intToSuit(int number) {
