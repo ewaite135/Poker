@@ -48,7 +48,14 @@ public class PokerMain {
         }
         String actionType = console.next();
         if(actionType != "C" && actionType != "F" && actionType != "B") {
-            
+            throw new IllegalArgumentException("Unexpected character. Type B, C, or F");
+        }
+        if(actionType == "B") {
+            System.out.println("How much do you want to bet?");
+            int betAmount = console.nextInt();
+
+        } else if(actionType == "C") {
+
         }
     }
 
