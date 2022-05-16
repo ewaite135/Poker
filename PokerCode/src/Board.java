@@ -21,11 +21,14 @@ public class Board {
         return commCards;
     }
 
+
+    //Pays out the pot to the winner
     public void payOutPot(Player winner) {
         winner.addChips(chipPot);
         chipPot = 0;
     }
 
+    //Just in case of a tie, plays out the pot to two winners
     public void payOutPot(Player winner1, Player winner2) {
         winner1.addChips(chipPot / 2);
         if(chipPot % 2 == 0) {
@@ -39,6 +42,8 @@ public class Board {
     public void addChipsToPot(int chips) {
         chipPot += chips;
     }
+
+    public int getPotSize() { return chipPot; }
 
     public String toString() {
         String output = "";

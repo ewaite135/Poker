@@ -38,5 +38,3 @@ public class Card implements Comparable<Card>{
         return cardVal - otherCard.getCardVal();
     }
 }
-
-// Hello

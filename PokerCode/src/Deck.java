@@ -18,6 +18,7 @@ public class Deck {
                  cardDeck.add(new Card(currCardNum, currCardSuit));
              }
          }
+         shuffleDeck();
     }
 
     //Shuffles the deck by randomly switching two cards
