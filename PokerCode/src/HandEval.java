@@ -38,7 +38,6 @@ public class HandEval {
         } else if(isFourOfAKind(cardCounter) > -1) {
             //Four of a kind
             //First tie breaker: the value of the four of a kind
-            //TODO: implement second tiebreaker for four of a kind
             //Second tie breaker: In case all 4 cards in four of a kind are on the board: the high card in the hand
             System.out.println("Four of a Kind!");
             return calculateHandValue(HandType.FOUR_OF_A_KIND, isFourOfAKind(cardCounter));

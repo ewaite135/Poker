@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Deck {
     private ArrayList<Card> cardDeck;
-    public Deck() {
+    public Deck(boolean shuffle) {
         //Initializes the deck
         String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
@@ -18,7 +18,9 @@ public class Deck {
                  cardDeck.add(new Card(currCardNum, currCardSuit));
              }
          }
-         shuffleDeck();
+         if (shuffle) {
+             shuffleDeck();
+         }
     }
 
     //Shuffles the deck by randomly switching two cards
@@ -40,6 +42,10 @@ public class Deck {
             cardDeck.remove(0);
         }
         return cardsDealt;
+    }
+
+    public list<Card> getDeck() {
+        return
     }
 
     //Prints out the deck. For testing purposes only, we obviously don't want people to see what cards are in the deck.

@@ -50,6 +50,10 @@ public class Hand implements Comparable<Hand>{
         return output;
     }
 
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+
     public int getAllCardSize() {
         return allCards.size();
     }
