@@ -7,7 +7,7 @@ public class Player {
     private String name;
     private boolean isTurn;
     private int chips;
-    private int lastBet;
+    private int lastBet = 0;
     //There are basically 3 actions a player can do when it's their turn: pass, bet, or fold.
     Hand playerHand = new Hand();
 

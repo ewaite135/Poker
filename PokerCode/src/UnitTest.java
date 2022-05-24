@@ -44,8 +44,9 @@ public class UnitTest {
         myHand.updateCardsOnBoard(board.getCards());
         System.out.println("This hand has an evaluation of: " + myHand.getHandVal());
         */
+
         //Testing out a straight
-        Hand hand2 = new Hand();
+/*      Hand hand2 = new Hand();
         Board board2 = new Board();
         Card c1 = new Card("10", Suit.SPADE);
         Card c2 = new Card("Jack", Suit.SPADE);
@@ -62,6 +63,9 @@ public class UnitTest {
         testBoardList.add(c5);
         board2.addCards(testBoardList);
         hand2.updateCardsOnBoard(board2.getCards());
-        System.out.println("This hand has an evaluation of: " + hand2.getHandVal());
+        System.out.println("This hand has an evaluation of: " + hand2.getHandVal()); */
+
+        //Testing out main method
+        Player Rowan = new Player(100, "Rowan");
     }
 }

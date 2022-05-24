@@ -57,17 +57,6 @@ public class PokerMain {
         }
     }
 
-    //Sees if every player has checked.
-    public boolean allHaveChecked(ArrayList<Player> playersInRound) {
-        boolean allChecked = true;
-        for(Player player : playersInRound) {
-            if (player.getLastBet() != 0) {
-                allChecked = false;
-            }
-        }
-        return allChecked;
-    }
-
     //Removes all the players that lost from the list of people who are currently playing
     public void removeLostPlayers(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++) {
@@ -80,40 +69,29 @@ public class PokerMain {
     }
 
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public void getPlayerAction(Player player, Board board, Scanner console, boolean foldable, boolean checkable) {
+    public void getPlayerAction(Player player, Board board, Scanner console, ArrayList<Player> players, ArrayList<Player> playersInRound) {
         System.out.println("Type B to bet");
-        if(foldable) {
-            System.out.print(", type F to fold");
-        }
-        if(checkable) {
-            System.out.print(", type C to check");
-        }
+        System.out.print(", type F to fold");
         String actionType = console.next();
-        //Makes sure the input is B, C, or F
-        while(actionType != "C" && actionType != "F" && actionType != "B") {
-            System.out.println("That's not a valid command./nPlease type B, C, or F/nType B to bet");
-            if(foldable) {
-                System.out.print(", type F to fold");
-            }
-            if(checkable) {
-                System.out.print(", type C to check");
-            }
+        //Makes sure the input is B or F (can add Checking later but is already implemented in betting.)
+        while(actionType != "F" && actionType != "B") {
+            System.out.println("That's not a valid command./nPlease type B, or F/nType B to bet");
+            System.out.print(", type F to fold");;
             actionType = console.next();
         }
         if(actionType == "B") {
-            System.out.println("How much do you want to bet?");
+            System.out.println("How much do you want to bet? The current bet is " + players.get(players.indexOf(player) - 1).getLastBet() + " chips.");
             int betAmount = console.nextInt();
-            while (betAmount < 0 || betAmount > player.getChips()) {
-                System.out.println("Please bet an amount between 0 and " + player.getChips());
+            while (betAmount < players.get(players.indexOf(player) - 1).getLastBet() || betAmount > player.getChips()) {
+                System.out.println("Please bet an amount between " + players.get(players.indexOf(player) - 1).getLastBet() + " and your current chips (" + player.getChips() + ").");
                 betAmount = console.nextInt();
             }
             player.addChips(-betAmount);
             player.setLastBet(betAmount);
             board.addChipsToPot(betAmount);
-        } else if(actionType == "C") {
-            player.setLastBet(0);
-        } else {
-            player.setLastBet(-1);
+        } else if (actionType == "F") {
+            playersInRound.remove(players.indexOf(player));
+            System.out.println("You folded. Better luck next round!");
         }
     }
 }
