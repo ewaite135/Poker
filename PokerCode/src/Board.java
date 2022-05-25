@@ -46,7 +46,7 @@ public class Board {
     public int getPotSize() { return chipPot; }
 
     public String toString() {
-        String output = "";
+        String output = "Cards on the board: ";
         for(int i = 0; i < commCards.size(); i++) {
             output += commCards.get(i) + ", ";
         }

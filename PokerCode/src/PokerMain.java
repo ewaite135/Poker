@@ -23,33 +23,26 @@ public class PokerMain {
         }
         //Main game loop
         while(!gameOver(players)) {
-
             //Start new round
             startRound(players, playersInRound, deck, board, ANTE);
-            int playerBetting = 0;
-            while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
-                getPlayerAction(playersInRound.get(playerBetting), board, console, lastBet);
-            }
-            //start the betting
-            /*
-            while(not everyone has checked) {
-                continue the betting phase
-            }
-            deal 3 cards to the board
-            while(not everyone has checked) {
-                continue the betting phase
-            }
-            deal one more card to the board
-            while(not everyone has checked) {
-                continue the betting phase
-            }
-            deal one more card to the board
-            while(not everyone has checked) {
-                continue the betting phase
-            }
-            people show their cards and the winner is revealed (and the pot is paid out)
+            //Continues betting until everyone has folded or checked
+            doBettingPhase(playersInRound, board, console);
+            //deal 3 cards to the board
+            board.addCards(deck.dealCards(3));
+            //Continues betting until everyone has folded or checked
+            doBettingPhase(playersInRound, board, console);
+            //deal 1 cards to the board
+            board.addCards(deck.dealCards(1));
+            //Continues betting until everyone has folded or checked
+            doBettingPhase(playersInRound, board, console);
+            //deal the final card to the board
+            board.addCards(deck.dealCards(1));
+            //Continues betting until everyone has folded or checked
+            doBettingPhase(playersInRound, board, console);
+            //Finds and pays out the winner
+            Player roundWinner = findWinner(playersInRound);
+            roundWinner.addChips(board.getPotSize());
 
-             */
         }
 
     }
@@ -124,6 +117,31 @@ public class PokerMain {
         }
     }
 
+    public static void doBettingPhase(ArrayList<Player> playersInRound, Board board, Scanner console) {
+        int playerBetting = 0;
+        int lastBet = 0;
+        //start the betting
+        while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
+            //Gets the player to bet or fold
+            getPlayerAction(playersInRound.get(playerBetting), board, console, lastBet);
+            //increases the last bet variable to know the minimum amount needed to bet.
+            lastBet += playersInRound.get(playerBetting).getLastBetIncrease();
+            //Goes to the next player.
+            playerBetting = getNextPlayer(playersInRound, playerBetting);
+            updateActivePlayers(playersInRound);
+
+        }
+    }
+
+    public static Player findWinner(ArrayList<Player> playersInRound) {
+        int highestHandIndex = 0;
+        for(int i = 0; i < playersInRound.size(); i++) {
+            if(playersInRound.get(i).getHandVal() > highestHandIndex) {
+                highestHandIndex = i;
+            }
+        }
+        return playersInRound.get(highestHandIndex);
+    }
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
     public static void getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
         System.out.println("Type B to bet or type F to fold");
