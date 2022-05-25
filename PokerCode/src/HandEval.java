@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class HandEval {
     //Turns a hand into an array of counts counting the times each number appears in the hand.
@@ -12,19 +13,22 @@ public class HandEval {
         return cardCounter;
     }
 
-    public static double evalHand(ArrayList<Card> handCards, ArrayList<Card> commCards) {
+    public static double evalHand(Card[] handCards, Card[] commCards) {
         ArrayList<Card> allCards = new ArrayList<Card>();
-        allCards.addAll(handCards);
-        if(commCards.size() > 0) {
-            allCards.addAll(commCards);
+        allCards.add(handCards[0]);
+        allCards.add(handCards[1]);
+        if(commCards.length > 0) {
+            for(int i = 0; i < commCards.length; i++) {
+                allCards.add(commCards[i]);
+            }
         }
-        Collections.sort(handCards);
         int[] cardCounter  = initializeCardCounter(allCards);
+        handCards = sortCardArray(handCards);
         //For testing
         System.out.println("Card value counting array:");
         System.out.println(Arrays.toString(cardCounter));
-        System.out.println("cards in hand: " + Utilities.printCardArrayList(handCards));
-        System.out.println("cards on board: " + Utilities.printCardArrayList(commCards));
+        System.out.println("cards in hand: " + Arrays.toString(handCards));
+        System.out.println("cards on board: " + Utilities.printCardList(commCards));
         if((isHandFlush(handCards, allCards) > -1) && (isHandStraight(cardCounter) == 12)) {
             //Royal flush
             //No tiebreakers
@@ -79,18 +83,17 @@ public class HandEval {
             //One pair
             //First tie breaker: the value of the pair
             System.out.println("Pair!");
-            return calculateHandValue(HandType.PAIR, isPair(cardCounter), handCards.get(1).getCardVal(),
-                    handCards.get(0).getCardVal());
+            return calculateHandValue(HandType.PAIR, isPair(cardCounter), handCards[1].getCardVal(),
+                    handCards[0].getCardVal());
         } else {
-            Collections.sort(handCards);
             //Just the highest card
             //The tiebreaker is the value of the highest card in the hand, the the value of the other card in the hand
             System.out.println("High Card!");
-            return calculateHandValue(HandType.HIGH_CARD, handCards.get(1).getCardVal(), handCards.get(0).getCardVal());
+            return calculateHandValue(HandType.HIGH_CARD, handCards[1].getCardVal(), handCards[0].getCardVal());
         }
     }
 
-    private static int isHandFlush(ArrayList<Card> handCards, ArrayList<Card> allCards) {
+    private static int isHandFlush(Card[] handCards, ArrayList<Card> allCards) {
         int highFlushCardInHand = -1;
         int[] suitsCounter = new int[4];
         for(Card card: allCards) {
@@ -101,11 +104,11 @@ public class HandEval {
             if (suitsCounter[suitIndex] >= 5) {
                 //It's a flush. Sets the suit of the flush
                 flushSuit = intToSuit(suitIndex);
-                if(handCards.get(0).getSuit() == flushSuit) {
-                    highFlushCardInHand = handCards.get(0).getCardVal();
+                if(handCards[0].getSuit() == flushSuit) {
+                    highFlushCardInHand = handCards[0].getCardVal();
                 }
-                if(handCards.get(1).getSuit() == flushSuit ) {
-                    highFlushCardInHand = Math.max(highFlushCardInHand, handCards.get(1).getCardVal());
+                if(handCards[1].getSuit() == flushSuit ) {
+                    highFlushCardInHand = Math.max(highFlushCardInHand, handCards[1].getCardVal());
                 }
             }
         }
@@ -198,6 +201,14 @@ public class HandEval {
         }
         Suit[] suitArray = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
         return suitArray[number];
+    }
+
+    private static Card[] sortCardArray(Card[] startArr) {
+        if(startArr[0].getCardVal() > startArr[1].getCardVal()) {
+            return new Card[] {startArr[1], startArr[0]};
+        } else {
+            return startArr;
+        }
     }
 
     private static double calculateHandValue(HandType handType, int firstTieBreaker, int secondTieBreaker, int thirdTieBreaker) {

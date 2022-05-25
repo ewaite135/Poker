@@ -59,12 +59,12 @@ public class Hand implements Comparable<Hand>{
     }
 
     public double getHandVal(){
-        return HandEval.evalHand(hand, boardCards);
+        return HandEval.evalHand(Utilities.toCardArray(hand), Utilities.toCardArray(boardCards));
     }
 
     //Evaluates which hand is better.
     public int compareTo(Hand otherHand) {
-        double otherHandVal = HandEval.evalHand(otherHand.hand, otherHand.boardCards);
+        double otherHandVal = HandEval.evalHand(Utilities.toCardArray(otherHand.hand), Utilities.toCardArray(otherHand.boardCards));
         return (int) Math.signum(getHandVal() - otherHandVal);
     }
 }
