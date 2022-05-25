@@ -1,6 +1,6 @@
 /*
     Just tests to make sure everything works properly. Like the shoppingTest of the Poker game.
-*/
+
 import java.util.ArrayList;
 public class UnitTest {
     public static void main(String[]args) {
@@ -32,8 +32,8 @@ public class UnitTest {
         }
         System.out.println();
         System.out.println(myDeck);
-         */
-        /*
+
+
         Deck myDeck2 = new Deck();
         myDeck2.shuffleDeck();
         Hand myHand = new Hand(myDeck2.dealCards(2));
@@ -43,7 +43,7 @@ public class UnitTest {
         //System.out.println("The board is: " + board);
         myHand.updateCardsOnBoard(board.getCards());
         System.out.println("This hand has an evaluation of: " + myHand.getHandVal());
-        */
+
         //Testing out a straight
         Hand hand2 = new Hand();
         Board board2 = new Board();
@@ -65,3 +65,4 @@ public class UnitTest {
         System.out.println("This hand has an evaluation of: " + hand2.getHandVal());
     }
 }
+*/

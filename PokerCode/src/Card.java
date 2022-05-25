@@ -37,4 +37,9 @@ public class Card implements Comparable<Card>{
     public int compareTo(Card otherCard) {
         return cardVal - otherCard.getCardVal();
     }
+
+    //returns true if two cards are the same
+    public boolean isSameAs(Card otherCard) {
+        return (suit == otherCard.getSuit() && cardVal == otherCard.getCardVal());
+    }
 }

@@ -44,9 +44,6 @@ public class Deck {
         return cardsDealt;
     }
 
-    public list<Card> getDeck() {
-        return
-    }
 
     //Prints out the deck. For testing purposes only, we obviously don't want people to see what cards are in the deck.
     public String toString() {
