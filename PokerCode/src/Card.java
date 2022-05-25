@@ -23,6 +23,10 @@ public class Card implements Comparable<Card>{
         return suit;
     }
 
+    public String getName() {
+        return cardName;
+    }
+
     public int getCardVal() {
         return cardVal;
     }
