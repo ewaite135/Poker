@@ -125,32 +125,27 @@ public class PokerMain {
     }
 
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public static int getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
-        System.out.println("Type B to bet, type F to fold, or type C to check");
+    public static void getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
+        System.out.println("Type B to bet or type F to fold");
         String actionType = console.next();
-        //Makes sure the input is B, C, or F
-        while(actionType != "C" && actionType != "F" && actionType != "B") {
-            System.out.println("That's not a valid command./nPlease type B, C, or F");
-            System.out.println("Type B to bet, type F to fold, type C to check");
+        //Makes sure the input is B or F (can add Checking later but is already implemented in betting.)
+        while(actionType != "F" && actionType != "B" && actionType != "C") {
+            System.out.println("That's not a valid command./nPlease type B, or F");
+            System.out.print("Type B to bet or type F to fold");;
             actionType = console.next();
         }
         if(actionType == "B") {
-            System.out.println("How much do you want to bet?");
+            System.out.println("How much do you want to bet? The current bet is " + lastPlayerBet + " chips.");
             int betAmount = console.nextInt();
             while (betAmount < lastPlayerBet || betAmount > player.getChips()) {
-                System.out.println("Please bet an amount between" + lastPlayerBet + " and " + player.getChips());
+                System.out.println("Please bet an amount between " + lastPlayerBet + " and your current chips (" + player.getChips() + ").");
                 betAmount = console.nextInt();
             }
             player.addChips(-betAmount);
             player.setLastBetIncrease(betAmount - lastPlayerBet);
             board.addChipsToPot(betAmount);
-            return betAmount;
-        } else if(actionType == "C") {
-            player.setLastBetIncrease(0);
-            return 0;
-        } else {
-            player.setLastBetIncrease(-1);
-            return -1;
+        } else if (actionType == "F") {
+            System.out.println("You folded. Better luck next round!");
         }
     }
 }
