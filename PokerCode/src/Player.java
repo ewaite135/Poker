@@ -7,7 +7,7 @@ public class Player {
     private String name;
     private boolean isTurn;
     private int chips;
-    private int lastBet;
+    private int lastBetIncrease;
     //There are basically 3 actions a player can do when it's their turn: pass, bet, or fold.
     Hand playerHand = new Hand();
 
@@ -33,12 +33,12 @@ public class Player {
         return chips;
     }
 
-    public void setLastBet(int betAmount) {
-        lastBet = betAmount;
+    public void setLastBetIncrease(int betAmount) {
+        lastBetIncrease = betAmount;
     }
 
-    public int getLastBet() {
-        return lastBet;
+    public int getLastBetIncrease() {
+        return lastBetIncrease;
     }
     public void setName(String newName) {
         name = newName;
