@@ -3,9 +3,12 @@ public class Card implements Comparable<Card>{
     private String cardName;
     private Suit suit;
 
-    public Card(String name, Suit suit) {
+    private boolean isVisible;
+
+    public Card(String name, Suit suit, boolean isVisible) {
         this.suit = suit;
         cardName = name;
+        this.isVisible = isVisible;
         //just for testing purposes
         cardVal = -1;
         String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
@@ -19,6 +22,11 @@ public class Card implements Comparable<Card>{
         }
     }
 
+    public Card(String name, Suit suit) {
+        this(name,suit, false);
+    }
+
+
     public Suit getSuit() {
         return suit;
     }
@@ -29,6 +37,14 @@ public class Card implements Comparable<Card>{
 
     public int getCardVal() {
         return cardVal;
+    }
+
+    public boolean getIsVisible() {
+        return isVisible;
+    }
+
+    public void setIsVisible(boolean visible) {
+        isVisible = visible;
     }
 
     public String toString() {
