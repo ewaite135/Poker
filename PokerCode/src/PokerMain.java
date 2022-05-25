@@ -28,7 +28,7 @@ public class PokerMain {
             startRound(players, playersInRound, deck, board, ANTE);
             int playerBetting = 0;
             while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
-                getPlayerAction(playersInRound.get(playerBetting), board, console, playersInRound(playerBetting - 1).get)
+                getPlayerAction(playersInRound.get(playerBetting), board, console, lastBet);
             }
             //start the betting
             /*
@@ -125,7 +125,7 @@ public class PokerMain {
     }
 
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public static void getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
+    public static int getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
         System.out.println("Type B to bet, type F to fold, or type C to check");
         String actionType = console.next();
         //Makes sure the input is B, C, or F
@@ -144,10 +144,13 @@ public class PokerMain {
             player.addChips(-betAmount);
             player.setLastBetIncrease(betAmount - lastPlayerBet);
             board.addChipsToPot(betAmount);
+            return betAmount;
         } else if(actionType == "C") {
             player.setLastBetIncrease(0);
+            return 0;
         } else {
             player.setLastBetIncrease(-1);
+            return -1;
         }
     }
 }
