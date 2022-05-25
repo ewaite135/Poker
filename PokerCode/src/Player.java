@@ -40,6 +40,10 @@ public class Player {
     public int getLastBetIncrease() {
         return lastBetIncrease;
     }
+
+    public double getHandVal() {
+        return playerHand.getHandVal();
+    }
     public void setName(String newName) {
         name = newName;
     }
