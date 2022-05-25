@@ -46,7 +46,7 @@ public class AIEvaluation {
     }
     //Complies a list of all the possible hands your opponent could have (sorted based on value)
     public void compilePossibleHands() {
-        ArrayList<Card[]> handList= new ArrayList<Card>();
+    //    ArrayList<Card[]> handList= new ArrayList<Card>();
         //For each card that could possibly be in their hand
         for(int firstCardIndex = 0; firstCardIndex < otherCards.size(); firstCardIndex++) {
             //Add each other card that could possibly be in their hand
