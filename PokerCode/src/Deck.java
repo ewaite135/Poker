@@ -7,8 +7,8 @@ public class Deck {
     private ArrayList<Card> cardDeck;
     public Deck(boolean shuffle) {
         //Initializes the deck
-        String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-        Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
+        final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
          cardDeck= new ArrayList<Card>();
          //Creates a deck of 52 unique cards
          for(int suitNum = 0; suitNum < 4; suitNum++) {
@@ -43,7 +43,6 @@ public class Deck {
         }
         return cardsDealt;
     }
-
 
     //Prints out the deck. For testing purposes only, we obviously don't want people to see what cards are in the deck.
     public String toString() {

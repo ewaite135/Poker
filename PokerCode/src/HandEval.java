@@ -177,7 +177,7 @@ public class HandEval {
     }
 
     private static int[] isFullHouse(int[] countArray) {
-        //returns the position of the 3 and then the 2
+        //returns the position of the 3 of a kind and then the 2 of a kind
         int[] fullHouseArray = {-1, -1};
         for(int i = 12; i >= 0; i--) {
             if(countArray[i] >= 3) {

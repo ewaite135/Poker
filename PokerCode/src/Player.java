@@ -5,7 +5,6 @@ Need to integrate the betting with the board class.
  */
 public class Player {
     private String name;
-    private boolean isTurn;
     private int chips;
     private int lastBetIncrease;
     //There are basically 3 actions a player can do when it's their turn: pass, bet, or fold.
@@ -13,7 +12,6 @@ public class Player {
 
     public Player(int startingChips, String name) {
         this.chips = startingChips;
-        boolean isTurn = false;
         this.name = name;
     }
 

@@ -41,16 +41,10 @@ public class PokerMain {
             doBettingPhase(playersInRound, board, console);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound);
-            roundWinner.addChips(board.getPotSize());
-
-        }
-
-    }
-    //deals cards to each player
-    public static void dealCards(ArrayList<Player> playerList, Deck deck) {
-        for(int i = 0; i < playerList.size();i++) {
-            playerList.get(i).resetHand();
-            playerList.get(i).dealCards(deck.dealCards(2));
+            board.payOutPot(roundWinner);
+            resetHands(players);
+            removeLostPlayers(players);
+            board.resetBoard();
         }
     }
 
@@ -141,6 +135,17 @@ public class PokerMain {
             }
         }
         return playersInRound.get(highestHandIndex);
+    }
+
+    public static void resetHands(ArrayList<Player> players) {
+        for(int i = 0; i < players.size(); i++) {
+            players.get(i).resetHand();
+        }
+    }
+
+    public static void updateCardsOnBoard(ArrayList<Player>players, Board board) {
+        for(int i = 0; i < players.size(); i++) {
+        }
     }
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
     public static void getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {

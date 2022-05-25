@@ -3,13 +3,10 @@ import java.util.ArrayList;
 public class Hand implements Comparable<Hand>{
     public ArrayList<Card> hand;
     public ArrayList<Card> boardCards;
-    //All cards represent the list of all cards on the board and in the hand.
-    public ArrayList<Card> allCards;
 
     //Initializes an empty hand
     public Hand() {
         hand = new ArrayList<Card>();
-        allCards = new ArrayList<Card>();
         boardCards = new ArrayList<Card>();
     }
 
@@ -18,17 +15,13 @@ public class Hand implements Comparable<Hand>{
         hand = new ArrayList<Card>();
         hand.addAll(handCardArrayList);
         boardCards = new ArrayList<Card>();
-        allCards = new ArrayList<Card>();
-        allCards.addAll(hand);
     }
 
     public void addCardsToHand(ArrayList<Card> cardsDealt) {
         hand.addAll(cardsDealt);
-        allCards.addAll(cardsDealt);
     }
 
     public void resetHand() {
-        allCards.clear();
         hand.clear();
         boardCards.clear();
     }
@@ -37,9 +30,6 @@ public class Hand implements Comparable<Hand>{
     public void updateCardsOnBoard(ArrayList<Card> cardsOnBoard) {
         boardCards.clear();
         boardCards.addAll(cardsOnBoard);
-        allCards.clear();
-        allCards.addAll(boardCards);
-        allCards.addAll(hand);
     }
 
     public String toString() {
@@ -52,10 +42,6 @@ public class Hand implements Comparable<Hand>{
 
     public ArrayList<Card> getHand() {
         return hand;
-    }
-
-    public int getAllCardSize() {
-        return allCards.size();
     }
 
     public double getHandVal(){

@@ -2,14 +2,12 @@ public class Card implements Comparable<Card>{
     private int cardVal; //just to determine which card is higher. This value ranges from 0 (a 2) to 12 (an ace)
     private String cardName;
     private Suit suit;
-
     private boolean isVisible;
 
     public Card(String name, Suit suit, boolean isVisible) {
         this.suit = suit;
         cardName = name;
         this.isVisible = isVisible;
-        //just for testing purposes
         cardVal = -1;
         String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         for(int i = 0; i < cardNameList.length; i++) {
@@ -25,7 +23,6 @@ public class Card implements Comparable<Card>{
     public Card(String name, Suit suit) {
         this(name,suit, false);
     }
-
 
     public Suit getSuit() {
         return suit;
@@ -58,7 +55,7 @@ public class Card implements Comparable<Card>{
         return cardVal - otherCard.getCardVal();
     }
 
-    //returns true if two cards are the same
+    //returns true if two cards are the same (in both suit and number)
     public boolean isSameAs(Card otherCard) {
         return (suit == otherCard.getSuit() && cardVal == otherCard.getCardVal());
     }
