@@ -32,7 +32,7 @@ public class AIEvaluation {
     public AIEvaluation(Board board, Hand hand) {
         this.board = board;
         commCards = this.board.getCards();
-        myCards = hand.getHand();
+        myCards = hand.getCards();
         //Fills the otherCards array with all possible cards
         String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};

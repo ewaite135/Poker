@@ -7,7 +7,7 @@ public class PokerGraphics {
         DrawingPanel panel1 = new DrawingPanel(1000,600);
         Graphics s = panel1.getGraphics();
         makeBoard(s,panel1);
-        Card card1 = new Card("7", Suit.CLUB,true);
+        Card card1 = new Card("10", Suit.CLUB,true);
         drawCard(card1, 400, 400, 100, s);
         Card card2 = new Card("Ace", Suit.HEART,true);
         drawCard(card2, 520, 400, 100, s);
@@ -100,12 +100,6 @@ public class PokerGraphics {
                 triangle.addPoint(x + (int) (size / 2) - (int) (size / 8), y + (int) (size * 0.7) + (int) (size / 3));
                 s.fillPolygon(triangle);
             }
-
         }
-
-
-
     }
-
-
 }

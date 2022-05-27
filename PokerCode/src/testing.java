@@ -20,7 +20,6 @@ public class testing {
         drawGrid(g,400,20,35,35,2);
     }
 
-
     // Draws pairs of black squares with blue x's and white squares,
 // taking the top left x,y coords, the size of each box, and the # of pairs
     public static void drawSquares(Graphics g,int x,int y,int boxSize,int pairs) {

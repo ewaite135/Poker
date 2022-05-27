@@ -7,24 +7,14 @@ public class Deck {
     private ArrayList<Card> cardDeck;
     public Deck(boolean shuffle) {
         //Initializes the deck
-        final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-        final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
-         cardDeck= new ArrayList<Card>();
-         //Creates a deck of 52 unique cards
-         for(int suitNum = 0; suitNum < 4; suitNum++) {
-             for(int cardNum = 0; cardNum < 13; cardNum++) {
-                 String currCardNum = cardNameList[cardNum];
-                 Suit currCardSuit = suitList[suitNum];
-                 cardDeck.add(new Card(currCardNum, currCardSuit));
-             }
-         }
+        resetDeck();
          if (shuffle) {
-             shuffleDeck();
+             shuffle();
          }
     }
 
     //Shuffles the deck by randomly switching two cards
-    public void shuffleDeck() {
+    public void shuffle() {
         for(int i = 0; i < cardDeck.size(); i++) {
             //Random number between 0 and 51
             int randNum = (int)(Math.random() * 52);
@@ -51,5 +41,19 @@ public class Deck {
             deckString = deckString + card.toString() + ", ";
         }
         return deckString;
+    }
+
+    public void resetDeck() {
+        final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
+        cardDeck= new ArrayList<Card>();
+        //Creates a deck of 52 unique cards
+        for(int suitNum = 0; suitNum < 4; suitNum++) {
+            for(int cardNum = 0; cardNum < 13; cardNum++) {
+                String currCardNum = cardNameList[cardNum];
+                Suit currCardSuit = suitList[suitNum];
+                cardDeck.add(new Card(currCardNum, currCardSuit));
+            }
+        }
     }
 }

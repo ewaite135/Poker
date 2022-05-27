@@ -24,71 +24,52 @@ public class HandEval {
         }
         int[] cardCounter  = initializeCardCounter(allCards);
         handCards = sortCardArray(handCards);
-        //For testing
-        System.out.println("Card value counting array:");
-        System.out.println(Arrays.toString(cardCounter));
-        System.out.println("cards in hand: " + Arrays.toString(handCards));
-        System.out.println("cards on board: " + Utilities.printCardList(commCards));
         if((isHandFlush(handCards, allCards) > -1) && (isHandStraight(cardCounter) == 12)) {
             //Royal flush
-            //No tiebreakers
-            System.out.println("Royal Flush!");
             return calculateHandValue(HandType.ROYAL_FLUSH);
         } else if(isHandFlush(handCards, allCards) > -1 && isHandStraight(cardCounter) > -1) {
             //Straight Flush
             //First tiebreaker: the highest card in the straight
-            System.out.println("Straight Flush");
             return calculateHandValue(HandType.ROYAL_FLUSH, isHandStraight(cardCounter));
         } else if(isFourOfAKind(cardCounter) > -1) {
             //Four of a kind
             //First tie breaker: the value of the four of a kind
             //Second tie breaker: In case all 4 cards in four of a kind are on the board: the high card in the hand
-            System.out.println("Four of a Kind!");
             return calculateHandValue(HandType.FOUR_OF_A_KIND, isFourOfAKind(cardCounter));
         } else if(isFullHouse(cardCounter)[0] > -1 && isFullHouse(cardCounter)[1] > -1) {
             //Full House
             //First tiebreaker: the value of the three of a kind
             //second tie breaker: the value of the pair
-            //testing purposes:
-            System.out.println("Full House!");
             int[] fullHouseArray = isFullHouse(cardCounter);
-            System.out.println("The three of a kind is " + fullHouseArray[0]);
-            System.out.println("The pair is " + fullHouseArray[1]);
             return calculateHandValue(HandType.FULL_HOUSE, isFullHouse(cardCounter)[0], isFullHouse(cardCounter)[1]);
         } else if(isHandFlush(handCards, allCards) > -1) {
             //Flush
             //First tie breaker: the highest card in the flush in your hand
             //TODO: Possibly implement fourth and fifth tie breakers
-            System.out.println("Flush!");
             return calculateHandValue(HandType.FLUSH, isHandFlush(handCards, allCards));
         } else if(isHandStraight(cardCounter) > -1) {
             //Straight
             //First tie breaker: The highest card of the straight.
             //I don't think there are any other tie breakers, but if you find any, please implement them.
-            System.out.println("Straight!");
             return calculateHandValue(HandType.STRAIGHT, isHandStraight(cardCounter));
         } else if(isThreeOfAKind(cardCounter) > -1) {
             //Three of a kind
             //First tie breaker: the value of the three of a kind
             //I don't know of any other tiebreakers
-            System.out.println("Three of a kind");
             return calculateHandValue(HandType.THREE_OF_A_KIND, isThreeOfAKind(cardCounter));
         } else if(isTwoPair(cardCounter)[1] > -1) {
             //Two pairs
             //First tie breaker: value of the higher pair
             //Second tie breaker: value of the lower pair
-            System.out.println("Two pairs!");
             return calculateHandValue(HandType.TWO_PAIRS, isTwoPair(cardCounter)[0], isTwoPair(cardCounter)[1]);
         } else if(isPair(cardCounter) > -1) {
             //One pair
             //First tie breaker: the value of the pair
-            System.out.println("Pair!");
             return calculateHandValue(HandType.PAIR, isPair(cardCounter), handCards[1].getCardVal(),
                     handCards[0].getCardVal());
         } else {
             //Just the highest card
             //The tiebreaker is the value of the highest card in the hand, the the value of the other card in the hand
-            System.out.println("High Card!");
             return calculateHandValue(HandType.HIGH_CARD, handCards[1].getCardVal(), handCards[0].getCardVal());
         }
     }
@@ -171,6 +152,9 @@ public class HandEval {
             if(countArray[i] >= 2) {
                 pairArray[pairNum] = i;
                 pairNum++;
+                if(pairArray[1] != -1) {
+                    return pairArray;
+                }
             }
         }
         return pairArray;

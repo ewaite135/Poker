@@ -25,6 +25,7 @@ public class PokerMain {
         while(!gameOver(players)) {
             //Start new round
             startRound(players, playersInRound, deck, board, ANTE);
+            printAllPlayerInfo(players);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal 3 cards to the board
@@ -37,10 +38,12 @@ public class PokerMain {
             doBettingPhase(playersInRound, board, console);
             //deal the final card to the board
             board.addCards(deck.dealCards(1));
+            System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //Finds and pays out the winner
-            Player roundWinner = findWinner(playersInRound);
+            Player roundWinner = findWinner(playersInRound, board);
+            System.out.println("The winner of this round is " +  roundWinner.getName());
             board.payOutPot(roundWinner);
             resetHands(players);
             removeLostPlayers(players);
@@ -51,6 +54,8 @@ public class PokerMain {
     public static void startRound(ArrayList<Player> players, ArrayList<Player> playersInRound, Deck deck, Board board, int ante) {
         playersInRound.clear();
         playersInRound.addAll(players);
+        deck.resetDeck();
+        deck.shuffle();
         System.out.println("Everyone bets the ante");
         for(int i = 0; i < playersInRound.size(); i++) {
             //deals 2 cards to each player
@@ -127,10 +132,14 @@ public class PokerMain {
         }
     }
 
-    public static Player findWinner(ArrayList<Player> playersInRound) {
+    public static Player findWinner(ArrayList<Player> playersInRound, Board board) {
         int highestHandIndex = 0;
+        double highestHandVal = 0;
         for(int i = 0; i < playersInRound.size(); i++) {
-            if(playersInRound.get(i).getHandVal() > highestHandIndex) {
+            Card[] playerHand = Utilities.toCardArray(playersInRound.get(i).getHand().getCards());
+            double playerHandVal = HandEval.evalHand(playerHand, Utilities.toCardArray(board.getCards()));
+            if(playerHandVal > highestHandVal) {
+                highestHandVal = playerHandVal;
                 highestHandIndex = i;
             }
         }
@@ -143,8 +152,10 @@ public class PokerMain {
         }
     }
 
-    public static void updateCardsOnBoard(ArrayList<Player>players, Board board) {
-        for(int i = 0; i < players.size(); i++) {
+    //for testing purposes only
+    public static void printAllPlayerInfo(ArrayList<Player>playersInRound) {
+        for(int i = 0; i < playersInRound.size(); i++) {
+            System.out.println("Player " + (i + 1) + ":" + playersInRound.get(i).toString());
         }
     }
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)

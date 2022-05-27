@@ -12,7 +12,7 @@ public class Player {
 
     public Player(int startingChips, String name) {
         this.chips = startingChips;
-        this.name = name;
+        this.name = Utilities.normalizeString(name);
     }
 
     public void resetHand() {
@@ -39,14 +39,16 @@ public class Player {
         return lastBetIncrease;
     }
 
-    public double getHandVal() {
-        return playerHand.getHandVal();
-    }
+    public Hand getHand() { return playerHand; }
     public void setName(String newName) {
         name = newName;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String toString() {
+        return name + " has " + chips + " and has a hand of " + playerHand.toString();
     }
 }
