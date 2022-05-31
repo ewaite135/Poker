@@ -14,6 +14,7 @@ public class PokerMain {
         ArrayList<Player> playersInRound = new ArrayList<Player>();
         int round = 0;
         int betMinimum = 0;
+        boolean playAgain = true;
         //Initialize the list of players
         System.out.println("How many players?");
         int numPlayers = console.nextInt();
@@ -23,7 +24,7 @@ public class PokerMain {
             players.add(new Player(STARTING_CHIPS, playerName));
         }
         //Main game loop
-        while(!gameOver(players)) {
+        while(!gameOver(players) && playAgain) {
             round++;
             //Start new round
             startRound(players, playersInRound, deck, board);
@@ -55,6 +56,7 @@ public class PokerMain {
             resetHands(players);
             removeLostPlayers(players);
             board.resetBoard();
+            playAgain = checkForNextRound(console);
         }
     }
 
@@ -118,6 +120,15 @@ public class PokerMain {
         return (playersWithChips < 2);
     }
 
+    public static boolean isSomeoneAllIn(ArrayList<Player> players) {
+        for(Player player: players) {
+            if(player.getChips() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //Removes all the players that lost from the list of people who are currently playing
     public static void removeLostPlayers(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++) {
@@ -175,6 +186,23 @@ public class PokerMain {
         }
     }
 
+    public static boolean checkForNextRound(Scanner console) {
+        System.out.println("Does everyone want to play another round?");
+        System.out.println("Type Y for yes and N for no");
+        String response = console.next().toUpperCase();
+        while(!response.equals("Y") && !response.equals("N")) {
+            System.out.println("Please try that again");
+            System.out.println("Does everyone want to play another round?");
+            System.out.println("Type Y for yes and N for no");
+        }
+        if(response.equals("Y")) {
+            System.out.println("Great!");
+            return true;
+        } else {
+            System.out.println("Thanks for playing!");
+            return false;
+        }
+    }
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
     public static void getPlayerAction(Player player, Board board, Scanner console, int highestTotalBet) {
         System.out.println("It is " + player.getName() + "'s turn.");
