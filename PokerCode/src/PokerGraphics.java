@@ -7,24 +7,18 @@ public class PokerGraphics {
     public static void main(String[] args) {
         DrawingPanel panel1 = new DrawingPanel(1000,600);
         Graphics s = panel1.getGraphics();
-        makeBoard(s,panel1);
-        Card card1 = new Card("Jack", Suit.SPADE,true);
-        drawCard(card1, 400, 400, 100, s);
-        Card card2 = new Card("King", Suit.HEART,true);
-        drawCard(card2, 520, 400, 100, s);
-
     }
 
     // Draws an image of the playing board.
-    public static void makeBoard(Graphics s, DrawingPanel panel1) {
+    public static void makeBoard(Graphics s, DrawingPanel panel1, Board board) {
         Color boardGreen = new Color(10,100,10);
         panel1.setBackground(boardGreen);
         s.setColor(Color.LIGHT_GRAY);
         for (int i = -3; i < 3; i++) {
             s.drawRect(panel1.getWidth() / 2 + i * (CARD_SIZE + CARD_SIZE / 6), panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE,(int)(CARD_SIZE * 1.4));
-            /*if (board.getCards.size() > 0) {
-                drawCard(board.getCards.get(i+3),panel1.getWidth() / 2 + i * (CARD_SIZE + CARD_SIZE / 6),panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE, s);
-            }*/
+            if (board.getCards().size() > 0 && i < board.getCards().size() - 3) {
+                drawCard(board.getCards().get(i+3),panel1.getWidth() / 2 + (i + 1) * (CARD_SIZE + CARD_SIZE / 6),panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE, s);
+            }
 
             //Just run the makeBoard method every time a new round starts, after the cards are added to the commCards in PokerMain
         }

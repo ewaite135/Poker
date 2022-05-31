@@ -16,6 +16,9 @@ public class Board {
     //Adds cards to the board (when they get dealt)
     public void addCards(ArrayList<Card> newCards) {
         commCards.addAll(newCards);
+        for (int i = 0; i < commCards.size(); i++) {
+            commCards.get(i).setIsVisible(true);
+        }
     }
 
     //Returns the cards on the board
