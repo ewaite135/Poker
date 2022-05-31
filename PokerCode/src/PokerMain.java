@@ -24,7 +24,7 @@ public class PokerMain {
             String playerName = console.next();
             players.add(new Player(STARTING_CHIPS, playerName));
         }
-        DrawingPanel panel1 = new DrawingPanel(1000,600);
+        DrawingPanel panel1 = new DrawingPanel(1200,800);
         Graphics s = panel1.getGraphics();
 
         //Main game loop
@@ -39,11 +39,13 @@ public class PokerMain {
             //deal 3 cards to the board
             board.addCards(deck.dealCards(3));
             PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal 1 cards to the board
             board.addCards(deck.dealCards(1));
             PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal the final card to the board

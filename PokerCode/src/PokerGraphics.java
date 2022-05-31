@@ -131,17 +131,23 @@ public class PokerGraphics {
     public static void dealHands (ArrayList<Player> players, DrawingPanel panel1, Graphics s) {
         int numPlayers = players.size();
         for (int i = 0; i < numPlayers/2; i++) {
-            drawCard(players.get(i).getHand().getCard(0),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * numPlayers/2,panel1.getHeight() / 6, CARD_SIZE, s);
-            drawCard(players.get(i).getHand().getCard(1),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * numPlayers/2 + (CARD_SIZE + CARD_SIZE/6),panel1.getHeight() / 3, CARD_SIZE, s);
-
+            drawHand(players.get(i), (panel1.getWidth() / ((numPlayers/2) + 1)) + i * (panel1.getWidth() / ((numPlayers/2) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() / 20), panel1, s);
         }
 
-        for (int i = Math.round(numPlayers/2); i < numPlayers; i++) {
-            drawCard(players.get(i).getHand().getCard(0),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * Math.round(numPlayers/2),panel1.getHeight() * 2/3, CARD_SIZE, s);
-            drawCard(players.get(i).getHand().getCard(1),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * Math.round(numPlayers/2) + (CARD_SIZE + CARD_SIZE/6),panel1.getHeight() * 2/3, CARD_SIZE, s);
-
+        for (int i = 0; i < (int)Math.round(numPlayers/2.0); i++) {
+            drawHand(players.get(i + numPlayers/2 ), (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) + i  * (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() * 7/9), panel1, s);
         }
+    }
 
+    public static void drawHand (Player player, int x, int y, DrawingPanel panel1, Graphics s) {
+        drawCard(player.getHand().getCard(0),x ,y, CARD_SIZE, s);
+        drawCard(player.getHand().getCard(1),x + (CARD_SIZE + CARD_SIZE/6) ,y, CARD_SIZE, s);
+        Font g = new Font("Helvetica", Font.ITALIC, (int) (CARD_SIZE / 6));
+        s.setColor(Color.GRAY);
+        s.fillRect(x - 5, y + ((int)(CARD_SIZE * 1.42)), (CARD_SIZE * 2 + CARD_SIZE/6), CARD_SIZE/6);
+        s.setFont(g);
+        s.setColor(Color.WHITE);
+        s.drawString(player.getName() + ": " + player.getChips() + " chips.", x, y + ((int)(CARD_SIZE * 1.4) + CARD_SIZE/6));
 
     }
 }
