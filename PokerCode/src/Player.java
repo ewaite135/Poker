@@ -57,6 +57,6 @@ public class Player {
     }
 
     public String toString() {
-        return name + " has " + chips + " and has a hand of " + playerHand.toString();
+        return name + " has " + chips + "chips and has a hand of " + playerHand.toString();
     }
 }

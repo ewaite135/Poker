@@ -55,7 +55,9 @@ public class Board {
         for(int i = 0; i < commCards.size() - 1; i++) {
             output += commCards.get(i) + ", ";
         }
-        output += commCards.get(commCards.size() - 1);
+        if(commCards.size() > 0) {
+            output += commCards.get(commCards.size() - 1);
+        }
         return output;
     }
 }

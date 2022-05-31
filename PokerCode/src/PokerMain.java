@@ -18,7 +18,7 @@ public class PokerMain {
         System.out.println("How many players?");
         int numPlayers = console.nextInt();
         for(int i = 0; i < numPlayers; i++) {
-            System.out.println("Please enter the name of Player " + i + ": ");
+            System.out.println("Please enter the name of Player " + (i + 1) + ": ");
             String playerName = console.next();
             players.add(new Player(STARTING_CHIPS, playerName));
         }
@@ -43,10 +43,14 @@ public class PokerMain {
             System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
-            printAllPlayerInfo(players);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound, board);
-            System.out.println("The winner of this round is " +  roundWinner.getName());
+            for(Player player : players) {
+                System.out.println(player);
+            }
+            System.out.println(board);
+            System.out.println("The winner of this round is " +  roundWinner.getName() +
+                    ". They get " + board.getPotSize() + " chips!");
             board.payOutPot(roundWinner);
             resetHands(players);
             removeLostPlayers(players);
@@ -125,8 +129,9 @@ public class PokerMain {
 
     //Does the whole betting phase until everyone checks or someone folds.
     public static void doBettingPhase(ArrayList<Player> playersInRound, Board board, Scanner console) {
+        //What is the minimum you can bet?
         int playerBetting = 0;
-        int lastBet = 0;
+        int highestTotalBet = 0;
         //Sets the last bet increase to -1 so the computer won't think
         //people have checked this round when they checked last round
         for(int i = 0; i < playersInRound.size(); i++) {
@@ -135,11 +140,8 @@ public class PokerMain {
         //start the betting
         while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
             //Gets the player to bet or fold
-            getPlayerAction(playersInRound.get(playerBetting), board, console, lastBet);
-            //increases the last bet variable to know the minimum amount needed to bet.
-            if (playersInRound.get(playerBetting).getLastBet() >= 0) {
-                lastBet = playersInRound.get(playerBetting).getLastBet();
-            }
+            getPlayerAction(playersInRound.get(playerBetting), board, console, highestTotalBet);
+            highestTotalBet = Math.max(highestTotalBet, playersInRound.get(playerBetting).getChipsBetThisRound());
             //Goes to the next player.
             playerBetting = getNextPlayer(playersInRound, playerBetting);
             //removes the inactive players from the playersInRound ArrayList
@@ -173,29 +175,23 @@ public class PokerMain {
         }
     }
 
-    //for testing purposes only
-    public static void printAllPlayerInfo(ArrayList<Player>playersInRound) {
-        for(int i = 0; i < playersInRound.size(); i++) {
-            System.out.println("Player " + (i + 1) + ":" + playersInRound.get(i).toString());
-        }
-    }
-
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public static void getPlayerAction(Player player, Board board, Scanner console, int betMinimum) {
+    public static void getPlayerAction(Player player, Board board, Scanner console, int highestTotalBet) {
         System.out.println("It is " + player.getName() + "'s turn.");
         System.out.println( player.toString());
         System.out.println(board.toString());
         System.out.println("There are " + board.getPotSize() + " chips in the pot.");
         System.out.println("Type B to bet or type F to fold");
-        String actionType = console.next();
+        String actionType = console.next().toUpperCase();
         //Makes sure the input is B or F (can add Checking later but is already implemented in betting.)
         while(!actionType.equals("F") && !actionType.equals("B")) {
             System.out.println("You typed " + actionType);
-            System.out.println("That's not a valid command.\nPlease type B or F");
-            System.out.print("Type B to bet or type F to fold");
-            actionType = console.next();
+            System.out.println("That's not a valid command.\nPlease type B to bet or type F to fold");
+            actionType = console.next().toUpperCase();
         }
         if(actionType.equals("B")) {
+            //BetMinimum is the minimum you can bet
+            int betMinimum = highestTotalBet - player.getChipsBetThisRound();
             System.out.println("How much do you want to bet? You have to bet at least " + betMinimum + " chips.");
             int betAmount = console.nextInt();
             while (betAmount < betMinimum || betAmount > player.getChips()) {
