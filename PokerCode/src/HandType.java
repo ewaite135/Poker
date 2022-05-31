@@ -1,3 +1,7 @@
+/*
+An enum that represents all the different types of hand one can have
+ */
+
 public enum HandType {
     ROYAL_FLUSH {
         public int getHandTypeVal() {return 9; }

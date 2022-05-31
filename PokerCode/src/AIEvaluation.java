@@ -1,19 +1,15 @@
 import java.util.ArrayList;
-import java.util.TreeMap;
+//import java.util.TreeMap;
 
 /*This class is just a place to put the math that will power our AI
 Basically, we just need to figure out how likely it is that our opponents will have better hands than us based on the cards
 then we can bet accordingly.
-To do this we need to:
+To do this we to:
 Figure out all the cards in the deck
 Figure out all the possible combinations of 2 cards our opponent could have (about 1000)
-For each of these combinations, figure out whether they have a better hand then you or not (and the chances they could)
-Bet based on what cards you think they have/how likely your cards are to be better
-Some sort of risk evaluation
+Generate 50 random boards that could appear, and then evaluate our hand and our opponents hand based on those boards
+This allows us to determine the general strength of our hand given the current board.
 
-Main issues: Brute force works only if all the cards are face up
-otherwise, not super helpful
-when 5 cards up:
 */
 
 public class AIEvaluation {
@@ -25,17 +21,17 @@ public class AIEvaluation {
     private ArrayList<Card> myCards;
     //For the cards in the deck and your opponents hands
     private ArrayList<Card> otherCards;
-    ArrayList<Card[]> handArray = new ArrayList<Card[]>();
+    ArrayList<Card[]> handArray = new ArrayList<>();
 
-    TreeMap<Double, Card[]> handList = new TreeMap<Double, Card[]>();
+    //TreeMap<Double, Card[]> handList = new TreeMap<Double, Card[]>();
 
     public AIEvaluation(Board board, Hand hand) {
         this.board = board;
         commCards = this.board.getCards();
         myCards = hand.getCards();
         //Fills the otherCards array with all possible cards
-        String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-        Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
+        final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
         otherCards= new ArrayList<Card>();
         //Creates a deck of 52 unique cards
         for(int suitNum = 0; suitNum < 4; suitNum++) {
@@ -45,6 +41,7 @@ public class AIEvaluation {
                 otherCards.add(new Card(currCardNum, currCardSuit));
             }
         }
+        //Removes the cards that are already in your hand and on the board
         for(Card cardOnBoard : board.getCards()) {
             otherCards.remove(cardOnBoard);
         }
@@ -52,10 +49,8 @@ public class AIEvaluation {
             otherCards.remove(cardInHand);
         }
     }
-    //Complies a list of all the possible hands your opponent could have
+    //Complies a list of all the possible hands your opponent could have, given the cards in your hand and on the board
     public void compilePossibleHands() {
-        ArrayList<Card> boardCards = board.getCards();
-        Card[] tempCardList = new Card[2];
         //For each card that could possibly be in their hand
         for(int firstCardIndex = 0; firstCardIndex < otherCards.size(); firstCardIndex++) {
             //Add each other card that could possibly be in their hand
@@ -70,7 +65,9 @@ public class AIEvaluation {
 
     //Returns the percentage chance that you win (based on just the cards on the board and
     //the possible cards in your opponent's hand.
-    public double findPresentHandOdds() {
+    //I don't think we need to use a treeMap for this data but we could. I'll try the arrayList approach and see
+    //if it's fast enough
+    /*public double findPresentHandOdds() {
         for(Card[] hand : handArray) {
             double tempHandVal = HandEval.evalHand(hand, Utilities.toCardArray(commCards));
             handList.put(tempHandVal, hand);
@@ -87,32 +84,38 @@ public class AIEvaluation {
             return (position / handList.size());
         }
         return -1;
-    }
+    }*/
 
+    //Generates an array  of 50 possible boards.
     public Card[][] generatePossibleBoards() {
-        int cardsGenPerBoard = 5 - commCards.size();
-        if(cardsGenPerBoard > 0) {
-            Card[][] possibleBoards = new Card[NUM_BOARDS_EVALUATED][5 - commCards.size()];
-            //For each of the boards we are creating
-            for(int boardNum = 0; boardNum < NUM_BOARDS_EVALUATED; boardNum++) {
-                int currCardGenerated = 0;
-                //for each card in the board
-                while(currCardGenerated < cardsGenPerBoard) {
-                    //generate a random card
-                    possibleBoards[boardNum][currCardGenerated] = getRandomCard();
-                    //If that card is already in the board, keep generating random cards until you get a new one
-                    while(hasDuplicates(possibleBoards[boardNum])) {
-                        possibleBoards[boardNum][currCardGenerated] = getRandomCard();
-                    }
-                    currCardGenerated++;
-                }
-            }
-            return possibleBoards;
-        } else {
-            throw new IllegalArgumentException("No boards need to be generated, all cards are on the table");
+        Card[][] possibleBoards = new Card[NUM_BOARDS_EVALUATED][5];
+        //Fills in an Array with the current cards
+        Card[] currBoardCards = new Card[5];
+        for(int i = 0; i < commCards.size(); i++) {
+            currBoardCards[i] = commCards.get(i);
         }
+        //For each of the boards we are creating
+        for(int boardNum = 0; boardNum < NUM_BOARDS_EVALUATED; boardNum++) {
+            //Fill the board with the cards we already know
+            int currCard;
+            for(currCard = 0; currCard < commCards.size(); currCard++) {
+                possibleBoards[boardNum][currCard] = currBoardCards[currCard];
+            }
+            //for each card that needs to be generated
+            while(currCard < 5) {
+                //generate a random card
+                possibleBoards[boardNum][currCard] = getRandomCard();
+                //If that card is already in the board, keep generating random cards until you get a new one
+                while(hasDuplicates(possibleBoards[boardNum])) {
+                    possibleBoards[boardNum][currCard] = getRandomCard();
+                }
+                currCard++;
+            }
+        }
+        return possibleBoards;
     }
 
+    //Returns a random card
     private Card getRandomCard() {
         final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
@@ -121,7 +124,8 @@ public class AIEvaluation {
         return new Card(cardName, suit);
     }
 
-    //Determines whether a Card array has duplicate cards or not.
+    //Determines whether a single Card array has duplicate cards or not.
+    //This method should only be used for small arrays because it will take a long time on larger arrays
     private boolean hasDuplicates(Card[] testArr) {
         for(int index1 = 0; index1 < testArr.length - 1; index1++) {
             for(int index2 = index1 + 1; index2 < testArr.length; index2++) {
@@ -133,34 +137,35 @@ public class AIEvaluation {
         return false;
     }
 
-    //Combines the arrays and sees whether the combined array has duplicates
+    //Combines the card arrays and then sees whether the combined array has duplicates
     private boolean hasDuplicates(Card[] arr1, Card[] arr2) {
         Card[] arr3 = new Card[arr1.length + arr2.length];
-        for(int i = 0; i < arr1.length; i++) {
-            arr3[i] = arr1[i];
-        }
-        for(int i = 0; i < arr2.length; i++) {
-            arr3[arr1.length + i] = arr2[i];
-        }
+        System.arraycopy(arr1, 0, arr3, 0, arr1.length);
+        System.arraycopy(arr2, 0, arr3, arr1.length, arr2.length);
         return hasDuplicates(arr3);
     }
 
-    public double evaluateRandomPossiblities() {
+    //evaluate the strength of your hand based on the cards already in your hand and on the board
+    public double evaluateHandStrength() {
+        Card[] handCards = Utilities.toCardArray(myCards);
+        int numHandsEvaluated = 0;
         int numWorseHands = 0;
         //A list of a given number of possible boards
         Card[][] possibleBoards = generatePossibleBoards();
-        int totalHandsEval = handArray.size() * possibleBoards.length;
-        //For each possible card combination your opponent could have (as shown by their hands in the handList)
+        //For each possible hand your opponent could have (about 1000 maximum)
         for(Card[] hand: handArray) {
+            //For each of the 50 random boards generated
             for(Card[] possibleBoard : possibleBoards) {
-                double myHandVal = HandEval.evalHand(Utilities.toCardArray(myCards), possibleBoard);
-                double oppHandVal = HandEval.evalHand(hand, possibleBoard);
-                if(myHandVal > oppHandVal) {
-                    numWorseHands++;
+                //If there are no duplicates between the hand and the board
+                if(!hasDuplicates(possibleBoard, hand)) {
+                    numHandsEvaluated++;
+                    if (HandEval.evalHand(handCards, possibleBoard) > HandEval.evalHand(hand, possibleBoard)) {
+                        numWorseHands++;
+                    }
                 }
             }
         }
-        return ((double) numWorseHands / totalHandsEval);
+        return ((double) numWorseHands / numHandsEvaluated);
     }
 }
 

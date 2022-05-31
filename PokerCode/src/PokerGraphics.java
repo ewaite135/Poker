@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class PokerGraphics {
     public static final int CARD_SIZE = 100;
@@ -7,11 +8,18 @@ public class PokerGraphics {
         DrawingPanel panel1 = new DrawingPanel(1000,600);
         Graphics s = panel1.getGraphics();
         makeBoard(s,panel1);
-        Card card1 = new Card("10", Suit.CLUB,true);
+        Deck deck = new Deck(true);
+        //Hand myHand = new Hand(deck.dealCards(2));
+        ArrayList<Card> handCards = new ArrayList<Card>();
+        handCards.add(new Card("2", Suit.SPADE));
+        handCards.add(new Card("4", Suit.SPADE));
+        Hand myHand = new Hand(handCards);
+        myHand.setHandVisibility(true);
+        drawHand(myHand, 400, 400, 100, s);
+        /*Card card1 = new Card("10", Suit.CLUB,true);
         drawCard(card1, 400, 400, 100, s);
         Card card2 = new Card("Ace", Suit.HEART,true);
-        drawCard(card2, 520, 400, 100, s);
-
+        drawCard(card2, 520, 400, 100, s);*/
     }
 
     // Draws an image of the playing board.
@@ -35,6 +43,10 @@ public class PokerGraphics {
         }
     }
 
+    public static void drawHand(Hand hand, int x, int y, double size, Graphics s) {
+        drawCard(hand.getCard(0), x, y, size, s);
+        drawCard(hand.getCard(1), x + (int)(size * 1.2), y, size, s);
+    }
     // Draws an image displaying a card. If visibility boolean is false, it displays the back of the card.
     public static void drawCard(Card card, int x, int y, double size, Graphics s) {
         // Draws the white border of the card
@@ -73,13 +85,19 @@ public class PokerGraphics {
             diamond.addPoint(x + (int) (size / 2) - (int) (size / 4), y + (int) (size * 0.7));
 
             Polygon spade = new Polygon();
+            //Top point
             spade.addPoint(x + (int) (size / 2), y + (int) (size * 0.7) - (int) (size / 3));
+            //Far right point
             spade.addPoint(x + (int) (size / 2) + (int) (size / 4), y + (int) (size * 0.7));
-            spade.addPoint(x + (int) (size / 2) + (int) (size / 12), y + (int) (size * 0.7));
+            //Right inside point
+            spade.addPoint(x + (int) (size / 2) + (int) (size / 20), y + (int) (size * 0.7));
+            //Bottom right point
             spade.addPoint(x + (int) (size / 2) + (int) (size / 8), y + (int) (size * 0.7) + (int) (size / 8));
+            //Bottom left point
             spade.addPoint(x + (int) (size / 2) - (int) (size / 8), y + (int) (size * 0.7) + (int) (size / 8));
-            spade.addPoint(x + (int) (size / 2) - (int) (size / 12), y + (int) (size * 0.7));
-            spade.addPoint(x + (int) (size / 2) - (int) (size / 4), y + (int) (size * 0.7));
+            //Left inside point
+            spade.addPoint(x + (int) (size / 2) - (int) (size / 20), y + (int) (size * 0.7));
+            //Far left point
             spade.addPoint(x + (int) (size / 2) - (int) (size / 4), y + (int) (size * 0.7));
 
             // Draws the suit on the card

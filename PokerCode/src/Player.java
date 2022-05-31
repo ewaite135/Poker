@@ -1,18 +1,21 @@
 import java.util.ArrayList;
 /*
-Represents a player, with a hand and the ability to bet.
-Need to integrate the betting with the board class.
+Represents a player, with a hand and the ability to bet or fold.
  */
 public class Player {
     private String name;
     private int chips;
-    private int lastBetIncrease;
-    //There are basically 3 actions a player can do when it's their turn: pass, bet, or fold.
+    //The last bet value stores a players last bet.
+    //-1 means they have not bet yet this round, while -2 means they have folded
+    private int lastBet;
+    private int chipsBetThisRound;
     Hand playerHand = new Hand();
 
     public Player(int startingChips, String name) {
         this.chips = startingChips;
         this.name = Utilities.normalizeString(name);
+        chipsBetThisRound = 0;
+        lastBet = -1;
     }
 
     public void resetHand() {
@@ -31,18 +34,23 @@ public class Player {
         return chips;
     }
 
-    public void setLastBetIncrease(int betAmount) {
-        lastBetIncrease = betAmount;
+    public void setLastBet(int betAmount) {
+        //If you've bet or checked, add that to the total number of chips bet this round
+        if(betAmount >= 0) {
+            chipsBetThisRound += betAmount;
+        } else { //If you've folded, set the chipsBetThisRound to 0;
+            chipsBetThisRound = 0;
+        }
+        lastBet = betAmount;
     }
 
-    public int getLastBetIncrease() {
-        return lastBetIncrease;
+    public int getLastBet() {
+        return lastBet;
     }
 
     public Hand getHand() { return playerHand; }
-    public void setName(String newName) {
-        name = newName;
-    }
+
+    public int getChipsBetThisRound() {return chipsBetThisRound;}
 
     public String getName() {
         return name;

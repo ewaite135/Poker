@@ -12,7 +12,8 @@ public class PokerMain {
         ArrayList<Player> players = new ArrayList<Player>();
         //An arrayList of the players in the current round
         ArrayList<Player> playersInRound = new ArrayList<Player>();
-        int lastBet = 0;
+        int round = 0;
+        int betMinimum = 0;
         //Initialize the list of players
         System.out.println("How many players?");
         int numPlayers = console.nextInt();
@@ -23,9 +24,10 @@ public class PokerMain {
         }
         //Main game loop
         while(!gameOver(players)) {
+            round++;
             //Start new round
-            startRound(players, playersInRound, deck, board, ANTE);
-            printAllPlayerInfo(players);
+            startRound(players, playersInRound, deck, board);
+            //printAllPlayerInfo(players);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal 3 cards to the board
@@ -41,6 +43,7 @@ public class PokerMain {
             System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
+            printAllPlayerInfo(players);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound, board);
             System.out.println("The winner of this round is " +  roundWinner.getName());
@@ -51,25 +54,29 @@ public class PokerMain {
         }
     }
 
-    public static void startRound(ArrayList<Player> players, ArrayList<Player> playersInRound, Deck deck, Board board, int ante) {
+    //Intializes the round.
+    // Resets the active player list, shuffles the deck and deals cards, and bets the ante for everyone
+    public static void startRound(ArrayList<Player> players, ArrayList<Player> playersInRound, Deck deck, Board board) {
         playersInRound.clear();
         playersInRound.addAll(players);
         deck.resetDeck();
         deck.shuffle();
+        System.out.println();
         System.out.println("Everyone bets the ante");
         for(int i = 0; i < playersInRound.size(); i++) {
             //deals 2 cards to each player
             playersInRound.get(i).dealCards(deck.dealCards(2));
             //everybody bets the ante
-            playersInRound.get(i).addChips(-ante);
-            board.addChipsToPot(ante);
+            playersInRound.get(i).addChips(-ANTE);
+            board.addChipsToPot(ANTE);
         }
     }
 
-    //removes all of the players that have folded
+    //removes all of the players that have folded from the Array of active players that round.
     public static void updateActivePlayers(ArrayList<Player> playersInRound) {
         for(int i = 0; i < playersInRound.size(); i++) {
-            if(playersInRound.get(i).getLastBetIncrease() == -1) {
+            //If that player has folded, remove them
+            if(playersInRound.get(i).getLastBet() == -2) {
                 playersInRound.remove(i);
             }
         }
@@ -86,15 +93,16 @@ public class PokerMain {
 
     //Sees if every player has checked.
     public static boolean allHaveChecked(ArrayList<Player> playersInRound) {
-        boolean allChecked = true;
         for(Player player : playersInRound) {
-            if (player.getLastBetIncrease() != 0) {
-                allChecked = false;
+            //if that player has not checked, return false
+            if (player.getLastBet() != 0) {
+                return false;
             }
         }
-        return allChecked;
+        return true;
     }
 
+    //Checks to see if the game is over (if everyone is out of chips)
     public static boolean gameOver(ArrayList<Player> players) {
         int playersWithChips = 0;
         for(int i = 0; i < players.size(); i++) {
@@ -102,36 +110,48 @@ public class PokerMain {
                 playersWithChips++;
             }
         }
+        //If two people still have chips, the game isn't over yet
         return (playersWithChips < 2);
     }
 
     //Removes all the players that lost from the list of people who are currently playing
     public static void removeLostPlayers(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++) {
-            int chips = players.get(i).getChips();
-            boolean lostLastHand = (players.get(i).getLastBetIncrease() == -1);
-            if(chips == 0 && lostLastHand) {
+            if(players.get(i).getChips() == 0) {
                 players.remove(i);
             }
         }
     }
 
+    //Does the whole betting phase until everyone checks or someone folds.
     public static void doBettingPhase(ArrayList<Player> playersInRound, Board board, Scanner console) {
         int playerBetting = 0;
         int lastBet = 0;
+        //Sets the last bet increase to -1 so the computer won't think
+        //people have checked this round when they checked last round
+        for(int i = 0; i < playersInRound.size(); i++) {
+            playersInRound.get(i).setLastBet(-1);
+        }
         //start the betting
         while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
             //Gets the player to bet or fold
             getPlayerAction(playersInRound.get(playerBetting), board, console, lastBet);
             //increases the last bet variable to know the minimum amount needed to bet.
-            lastBet += playersInRound.get(playerBetting).getLastBetIncrease();
+            if (playersInRound.get(playerBetting).getLastBet() >= 0) {
+                lastBet = playersInRound.get(playerBetting).getLastBet();
+            }
             //Goes to the next player.
             playerBetting = getNextPlayer(playersInRound, playerBetting);
+            //removes the inactive players from the playersInRound ArrayList
             updateActivePlayers(playersInRound);
-
+            //TEsting only
+            if(allHaveChecked(playersInRound)) {
+                System.out.println("Everyone has checked, so we will move to the next round");
+            }
         }
     }
 
+    //Compares everyone's hands and returns the player with the best hand (whose the winner of the round)
     public static Player findWinner(ArrayList<Player> playersInRound, Board board) {
         int highestHandIndex = 0;
         double highestHandVal = 0;
@@ -146,6 +166,7 @@ public class PokerMain {
         return playersInRound.get(highestHandIndex);
     }
 
+    //Clears everyone's hands
     public static void resetHands(ArrayList<Player> players) {
         for(int i = 0; i < players.size(); i++) {
             players.get(i).resetHand();
@@ -158,28 +179,37 @@ public class PokerMain {
             System.out.println("Player " + (i + 1) + ":" + playersInRound.get(i).toString());
         }
     }
+
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public static void getPlayerAction(Player player, Board board, Scanner console, int lastPlayerBet) {
+    public static void getPlayerAction(Player player, Board board, Scanner console, int betMinimum) {
+        System.out.println("It is " + player.getName() + "'s turn.");
+        System.out.println( player.toString());
+        System.out.println(board.toString());
+        System.out.println("There are " + board.getPotSize() + " chips in the pot.");
         System.out.println("Type B to bet or type F to fold");
         String actionType = console.next();
         //Makes sure the input is B or F (can add Checking later but is already implemented in betting.)
-        while(actionType != "F" && actionType != "B" && actionType != "C") {
-            System.out.println("That's not a valid command./nPlease type B, or F");
-            System.out.print("Type B to bet or type F to fold");;
+        while(!actionType.equals("F") && !actionType.equals("B")) {
+            System.out.println("You typed " + actionType);
+            System.out.println("That's not a valid command.\nPlease type B or F");
+            System.out.print("Type B to bet or type F to fold");
             actionType = console.next();
         }
-        if(actionType == "B") {
-            System.out.println("How much do you want to bet? The current bet is " + lastPlayerBet + " chips.");
+        if(actionType.equals("B")) {
+            System.out.println("How much do you want to bet? You have to bet at least " + betMinimum + " chips.");
             int betAmount = console.nextInt();
-            while (betAmount < lastPlayerBet || betAmount > player.getChips()) {
-                System.out.println("Please bet an amount between " + lastPlayerBet + " and your current chips (" + player.getChips() + ").");
+            while (betAmount < betMinimum || betAmount > player.getChips()) {
+                System.out.println("Please bet an amount between " + betMinimum + " and your current chips (" + player.getChips() + ").");
                 betAmount = console.nextInt();
             }
             player.addChips(-betAmount);
-            player.setLastBetIncrease(betAmount - lastPlayerBet);
+            player.setLastBet(betAmount);
             board.addChipsToPot(betAmount);
-        } else if (actionType == "F") {
+            System.out.println();
+        } else if (actionType.equals("F")) {
             System.out.println("You folded. Better luck next round!");
+            System.out.println();
+            player.setLastBet(-2);
         }
     }
 }

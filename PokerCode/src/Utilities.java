@@ -1,15 +1,7 @@
 import java.util.ArrayList;
 
 public class Utilities {
-    public static String printCardList(Card[] cardList) {
-        String output = "";
-        for(int i = 0; i < cardList.length - 1; i++) {
-            output += cardList[i] + ", ";
-        }
-        output += cardList[cardList.length - 1];
-        return output;
-    }
-
+    //Turns an arrayList of cards into an array.
     public static Card[] toCardArray(ArrayList<Card> cardList) {
         if(cardList.size() > 0) {
             Card[] cardArr = new Card[cardList.size()];
@@ -21,6 +13,7 @@ public class Utilities {
         return new Card[] {};
     }
 
+    //Normalizes a string so that only the first letter is capitalized.
     public static String normalizeString(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }

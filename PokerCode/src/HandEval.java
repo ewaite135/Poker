@@ -1,7 +1,9 @@
+/*
+This class is basically just the evalHand method that is used to evaluate hands.
+Each hand is looked at with the board and given a double value. The greater the value, the better the hand.
+When comparing hands, the one with the greater value wins.
+ */
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class HandEval {
     //Turns a hand into an array of counts counting the times each number appears in the hand.
@@ -13,6 +15,8 @@ public class HandEval {
         return cardCounter;
     }
 
+    //The important method in this class. Evaluates a list of cards on the hand and the board and returns a double
+    //This checks which type of hand a hand is, and then gives it a corresponding value and tiebreakers
     public static double evalHand(Card[] handCards, Card[] commCards) {
         ArrayList<Card> allCards = new ArrayList<Card>();
         allCards.add(handCards[0]);
@@ -30,7 +34,7 @@ public class HandEval {
         } else if(isHandFlush(handCards, allCards) > -1 && isHandStraight(cardCounter) > -1) {
             //Straight Flush
             //First tiebreaker: the highest card in the straight
-            return calculateHandValue(HandType.ROYAL_FLUSH, isHandStraight(cardCounter));
+            return calculateHandValue(HandType.STRAIGHT_FLUSH, isHandStraight(cardCounter));
         } else if(isFourOfAKind(cardCounter) > -1) {
             //Four of a kind
             //First tie breaker: the value of the four of a kind
@@ -74,6 +78,8 @@ public class HandEval {
         }
     }
 
+    //Checks to see whether a hand is a flush or not
+    //If it is, returns the highest value of that flush in your hand, otherwise returns -1
     private static int isHandFlush(Card[] handCards, ArrayList<Card> allCards) {
         int highFlushCardInHand = -1;
         int[] suitsCounter = new int[4];
@@ -114,7 +120,7 @@ public class HandEval {
     }
 
 
-    //If it finds a four of a kind, returns the highest one.
+    //If it finds a four of a kind, returns the cardVal of the four of a kind. Otherwise, returns -1
     private static int isFourOfAKind(int[] countArray) {
         for(int i = 12; i >= 0; i--) {
             if(countArray[i] >= 4) {
@@ -124,7 +130,7 @@ public class HandEval {
         return -1;
     }
 
-    //If it finds a three of a kind, returns the highest one.
+    //If there is a three of a kind, return the cardvAl of the three of a kind. Otherwise, return -1
     private static int isThreeOfAKind(int[] countArray) {
         for(int i = 12; i >= 0; i--) {
             if(countArray[i] >= 3) {
@@ -134,7 +140,7 @@ public class HandEval {
         return -1;
     }
 
-    //If it finds a pair, then returns the highest one.
+    //If it finds a pair, then returns the highest pair
     private static int isPair(int[] countArray) {
         for(int i = 12; i >= 0; i--) {
             if(countArray[i] >= 2) {
@@ -144,7 +150,7 @@ public class HandEval {
         return -1;
     }
 
-    //If it finds two pairs, then returns an array of the pair numbers
+    //If it finds two pairs, then returns an array of the pair numbers, with the higher pair number being first
     private static int[] isTwoPair(int[] countArray) {
         int pairNum = 0;
         int[] pairArray = {-1, -1};
@@ -160,8 +166,8 @@ public class HandEval {
         return pairArray;
     }
 
+    //If there is a full house, returns the position of the 3 of a kind and then the 2 of a kind
     private static int[] isFullHouse(int[] countArray) {
-        //returns the position of the 3 of a kind and then the 2 of a kind
         int[] fullHouseArray = {-1, -1};
         for(int i = 12; i >= 0; i--) {
             if(countArray[i] >= 3) {
@@ -179,6 +185,7 @@ public class HandEval {
         return fullHouseArray;
     }
 
+    //Converts an int to a suit. kind of bad and we should probably fix this but it works for now.
     private static Suit intToSuit(int number) {
         if(number > 3 || number < 0) {
             throw new IllegalArgumentException("Error: intToSuit input must be between 0 and 3");
@@ -187,7 +194,11 @@ public class HandEval {
         return suitArray[number];
     }
 
+    //Sorts a hand. This should probably be made into a good sorting algorithm but it works for now
     private static Card[] sortCardArray(Card[] startArr) {
+        if(startArr.length != 2) {
+            throw new IllegalArgumentException("Error: sortCardArr input array must have a length of 2");
+        }
         if(startArr[0].getCardVal() > startArr[1].getCardVal()) {
             return new Card[] {startArr[1], startArr[0]};
         } else {
@@ -195,6 +206,7 @@ public class HandEval {
         }
     }
 
+    //Given the tiebreakers and a hand type, returns a double that represents the strength of the hand
     private static double calculateHandValue(HandType handType, int firstTieBreaker, int secondTieBreaker, int thirdTieBreaker) {
         double handVal = handType.getHandTypeVal();
         handVal += (firstTieBreaker * 0.01);
@@ -203,14 +215,17 @@ public class HandEval {
         return handVal;
     }
 
+    //Given the tiebreakers and a hand type, returns a double that represents the strength of the hand
     private static double calculateHandValue(HandType handType, int firstTieBreaker, int secondTieBreaker) {
         return calculateHandValue(handType, firstTieBreaker, secondTieBreaker, 0);
     }
 
+    //Given the tiebreakers and a hand type, returns a double that represents the strength of the hand
     private static double calculateHandValue(HandType handType, int firstTieBreaker) {
         return calculateHandValue(handType, firstTieBreaker, 0, 0);
     }
 
+    //Given the tiebreakers and a hand type, returns a double that represents the strength of the hand
     private static double calculateHandValue(HandType handType) {
         return calculateHandValue(handType, 0, 0, 0);
     }

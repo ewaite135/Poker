@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Deck {
     private ArrayList<Card> cardDeck;
     public Deck(boolean shuffle) {
+        cardDeck= new ArrayList<Card>();
         //Initializes the deck
         resetDeck();
          if (shuffle) {
@@ -13,7 +14,7 @@ public class Deck {
          }
     }
 
-    //Shuffles the deck by randomly switching two cards
+    //Shuffles the deck by switching each card with a random card in the deck
     public void shuffle() {
         for(int i = 0; i < cardDeck.size(); i++) {
             //Random number between 0 and 51
@@ -43,10 +44,11 @@ public class Deck {
         return deckString;
     }
 
+    //Clears the deck and adds all 52 cards back in.
     public void resetDeck() {
         final String[] cardNameList = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
         final Suit[] suitList = {Suit.DIAMOND, Suit.HEART, Suit.SPADE, Suit.CLUB};
-        cardDeck= new ArrayList<Card>();
+        cardDeck.clear();
         //Creates a deck of 52 unique cards
         for(int suitNum = 0; suitNum < 4; suitNum++) {
             for(int cardNum = 0; cardNum < 13; cardNum++) {

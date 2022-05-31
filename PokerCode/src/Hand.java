@@ -14,6 +14,7 @@ public class Hand {
         hand.addAll(handCardArrayList);
     }
 
+    //Adds cards to the hand
     public void addCardsToHand(ArrayList<Card> cardsDealt) {
         hand.addAll(cardsDealt);
     }
@@ -22,6 +23,7 @@ public class Hand {
         hand.clear();
     }
 
+    //returns a string of the cards in the hand
     public String toString() {
         return hand.get(0).toString() + ", " + hand.get(1).toString();
     }
@@ -29,4 +31,13 @@ public class Hand {
     public ArrayList<Card> getCards() {
         return hand;
     }
+
+    //Sets all the cards in the hand to visible or not (for drawing purposes)
+    public void setHandVisibility(boolean visible) {
+        for(int i = 0; i < hand.size(); i++) {
+            hand.get(i).setIsVisible(visible);
+        }
+    }
+
+    public Card getCard(int index) { return hand.get(index);}
 }
