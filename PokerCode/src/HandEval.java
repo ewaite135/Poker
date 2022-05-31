@@ -60,7 +60,8 @@ public class HandEval {
             //Three of a kind
             //First tie breaker: the value of the three of a kind
             //I don't know of any other tiebreakers
-            return calculateHandValue(HandType.THREE_OF_A_KIND, isThreeOfAKind(cardCounter));
+            return calculateHandValue(HandType.THREE_OF_A_KIND, isThreeOfAKind(cardCounter),
+                    handCards[1].getCardVal(), handCards[0].getCardVal());
         } else if(isTwoPair(cardCounter)[1] > -1) {
             //Two pairs
             //First tie breaker: value of the higher pair

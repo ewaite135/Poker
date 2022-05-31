@@ -128,13 +128,28 @@ public class PokerMain {
         return (playersWithChips < 2);
     }
 
-    public static boolean isSomeoneAllIn(ArrayList<Player> players) {
+    //If someone is all in, return the int amount they bet. Otherwise, return -1
+    public static boolean allInSkipBetting(ArrayList<Player> players) {
+        int someoneAllIn = -1;
         for(Player player: players) {
             if(player.getChips() == 0) {
-                return true;
+                System.out.println(player.getName() + " is all in! Betting is skipped");
+                someoneAllIn =  player.getChipsBetThisRound();
             }
         }
-        return false;
+        //If someone is all in
+        if(someoneAllIn > 0) {
+            for(Player player : players) {
+                if(player.getChips() < someoneAllIn) {
+                    return false;
+                }
+            }
+            //returns true only if everyone has bet at least as much as the player who is all in
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     //Removes all the players that lost from the list of people who are currently playing
@@ -142,6 +157,7 @@ public class PokerMain {
         for(int i = 0; i < players.size(); i++) {
             if(players.get(i).getChips() == 0) {
                 players.remove(i);
+                i--;
             }
         }
     }
@@ -157,7 +173,7 @@ public class PokerMain {
             playersInRound.get(i).setLastBet(-1);
         }
         //start the betting
-        while(playersInRound.size() > 1 && !allHaveChecked(playersInRound)) {
+        while(playersInRound.size() > 1 && !allHaveChecked(playersInRound) && !allInSkipBetting(playersInRound)) {
             //Gets the player to bet or fold
             getPlayerAction(playersInRound.get(playerBetting), board, console, highestTotalBet);
             highestTotalBet = Math.max(highestTotalBet, playersInRound.get(playerBetting).getChipsBetThisRound());
@@ -228,6 +244,8 @@ public class PokerMain {
         if(actionType.equals("B")) {
             //BetMinimum is the minimum you can bet
             int betMinimum = highestTotalBet - player.getChipsBetThisRound();
+            //Makes it so that going all in can match any hand.
+            betMinimum = Math.min(betMinimum, player.getChips());
             System.out.println("How much do you want to bet? You have to bet at least " + betMinimum + " chips.");
             int betAmount = console.nextInt();
             while (betAmount < betMinimum || betAmount > player.getChips()) {
