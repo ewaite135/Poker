@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class PokerGraphics {
     public static final int CARD_SIZE = 100;
@@ -21,8 +22,13 @@ public class PokerGraphics {
         s.setColor(Color.LIGHT_GRAY);
         for (int i = -3; i < 3; i++) {
             s.drawRect(panel1.getWidth() / 2 + i * (CARD_SIZE + CARD_SIZE / 6), panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE,(int)(CARD_SIZE * 1.4));
+            /*if (board.getCards.size() > 0) {
+                drawCard(board.getCards.get(i+3),panel1.getWidth() / 2 + i * (CARD_SIZE + CARD_SIZE / 6),panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE, s);
+            }*/
+
+            //Just run the makeBoard method every time a new round starts, after the cards are added to the commCards in PokerMain
         }
-        s.drawOval((panel1.getWidth() / 8),panel1.getHeight() / 4,(int)(panel1.getWidth() * 6/8),panel1.getHeight() / 2);
+        s.drawOval((panel1.getWidth() / 8),panel1.getHeight() / 4,(panel1.getWidth() * 6/8),panel1.getHeight() / 2);
 
         // Draws an image to show the deck of cards. Change i to increase the height of the deck.
         for (int i = 0; i <10; i++) {
@@ -126,5 +132,22 @@ public class PokerGraphics {
             s.drawString("\'Em",x + (int) (size/3),y + (int) (size/2*1.4 + size/4.5*1.4));
 
         }
+    }
+    
+    public static void dealHands (ArrayList<Player> players, DrawingPanel panel1, Graphics s) {
+        int numPlayers = players.size();
+        for (int i = 0; i < numPlayers/2; i++) {
+            drawCard(players.get(i).getHand().getCard(0),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * numPlayers/2,panel1.getHeight() / 6, CARD_SIZE, s);
+            drawCard(players.get(i).getHand().getCard(1),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * numPlayers/2 + (CARD_SIZE + CARD_SIZE/6),panel1.getHeight() / 3, CARD_SIZE, s);
+
+        }
+
+        for (int i = Math.round(numPlayers/2); i < numPlayers; i++) {
+            drawCard(players.get(i).getHand().getCard(0),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * Math.round(numPlayers/2),panel1.getHeight() * 2/3, CARD_SIZE, s);
+            drawCard(players.get(i).getHand().getCard(1),panel1.getWidth()/(CARD_SIZE + CARD_SIZE/6) * 2 * Math.round(numPlayers/2) + (CARD_SIZE + CARD_SIZE/6),panel1.getHeight() * 2/3, CARD_SIZE, s);
+
+        }
+
+
     }
 }
