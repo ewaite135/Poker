@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -23,24 +24,31 @@ public class PokerMain {
             String playerName = console.next();
             players.add(new Player(STARTING_CHIPS, playerName));
         }
+        DrawingPanel panel1 = new DrawingPanel(1000,600);
+        Graphics s = panel1.getGraphics();
+
         //Main game loop
         while(!gameOver(players) && playAgain) {
             round++;
             //Start new round
             startRound(players, playersInRound, deck, board);
-            //printAllPlayerInfo(players);
+            PokerGraphics.dealHands(players, panel1, s);
+            PokerGraphics.makeBoard(s,panel1,board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal 3 cards to the board
             board.addCards(deck.dealCards(3));
+            PokerGraphics.makeBoard(s,panel1,board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal 1 cards to the board
             board.addCards(deck.dealCards(1));
+            PokerGraphics.makeBoard(s,panel1,board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
             //deal the final card to the board
             board.addCards(deck.dealCards(1));
+            PokerGraphics.makeBoard(s,panel1,board);
             System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console);
