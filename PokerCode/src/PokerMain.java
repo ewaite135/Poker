@@ -33,24 +33,24 @@ public class PokerMain {
             //Start new round
             startRound(players, playersInRound, deck, board);
             panel1.clear();
-            PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound);
             PokerGraphics.dealHands(playersInRound, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 3 cards to the board
             board.addCards(deck.dealCards(3));
-            PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 1 cards to the board
             board.addCards(deck.dealCards(1));
-            PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal the final card to the board
             board.addCards(deck.dealCards(1));
-            PokerGraphics.makeBoard(s,panel1,board);
-            //System.out.println(board);
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound);
+            System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //Finds and pays out the winner
@@ -108,7 +108,7 @@ public class PokerMain {
             }
         }
         panel1.clear();
-        PokerGraphics.makeBoard(s,panel1,board);
+        PokerGraphics.makeBoard(s,panel1,board, playersInRound);
         PokerGraphics.dealHands(playersInRound, panel1, s);
     }
 

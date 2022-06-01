@@ -7,7 +7,7 @@ public class PokerGraphics {
     }
 
     // Draws an image of the playing board.
-    public static void makeBoard(Graphics s, DrawingPanel panel1, Board board) {
+    public static void makeBoard(Graphics s, DrawingPanel panel1, Board board, ArrayList<Player> playersInRound) {
         Color boardGreen = new Color(10,100,10);
         panel1.setBackground(boardGreen);
         s.setColor(Color.LIGHT_GRAY);
@@ -18,6 +18,15 @@ public class PokerGraphics {
             }
         }
         s.drawOval((panel1.getWidth() / 8),panel1.getHeight() / 4,(panel1.getWidth() * 6/8),panel1.getHeight() / 2);
+        s.setColor(Color.GRAY);
+        s.fillRect(panel1.getWidth() / 2 - CARD_SIZE, panel1.getHeight() / 2 + CARD_SIZE, CARD_SIZE * 2, CARD_SIZE/3);
+        s.setColor(Color.WHITE);
+        Font z = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 6));
+        s.setFont(z);
+        s.drawString("Pot size: " + board.getPotSize() + " chips.", panel1.getWidth() / 2 - CARD_SIZE + 5, panel1.getHeight() / 2 + CARD_SIZE + CARD_SIZE/7 );
+        s.drawString("Current bet: " + playersInRound.get(0).getLastBet() + " chips.", panel1.getWidth() / 2 - CARD_SIZE + 5, panel1.getHeight() / 2 + CARD_SIZE + (int)(CARD_SIZE/3.5));
+
+
 
         // Draws an image to show the deck of cards. Change i to increase the height of the deck.
         for (int i = 0; i <10; i++) {
@@ -138,10 +147,10 @@ public class PokerGraphics {
         drawCard(player.getHand().getCard(1),x + (CARD_SIZE + CARD_SIZE/6) ,y, CARD_SIZE, s);
         Font g = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 6));
         s.setColor(Color.GRAY);
-        s.fillRect(x - 5, y + ((int)(CARD_SIZE * 1.42)), (CARD_SIZE * 2 + CARD_SIZE/6), CARD_SIZE/6);
+        s.fillRect(x, y + ((int)(CARD_SIZE * 1.42)), (CARD_SIZE * 2 + CARD_SIZE/6), CARD_SIZE/6);
         s.setFont(g);
         s.setColor(Color.WHITE);
-        s.drawString(player.getName() + ": " + player.getChips() + " chips.", x, y + ((int)(CARD_SIZE * 1.4) + CARD_SIZE/6));
+        s.drawString(player.getName() + " has " + player.getChips() + " chips.", x + 5, y + ((int)(CARD_SIZE * 1.4) + CARD_SIZE/6));
 
     }
 }
