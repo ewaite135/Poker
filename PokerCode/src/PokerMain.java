@@ -56,9 +56,9 @@ public class PokerMain {
             doBettingPhase(playersInRound, board, console, panel1, s);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound, board);
-            for(Player player : players) {
-                System.out.println(player);
-            }
+            //for(Player player : players) {
+            //    System.out.println(player);
+            //}
             System.out.println(board);
             System.out.println("The winner of this round is " +  roundWinner.getName() +
                     ". They get " + board.getPotSize() + " chips!");
@@ -68,6 +68,14 @@ public class PokerMain {
             board.resetBoard();
             playAgain = checkForNextRound(console);
         }
+        Player winner = players.get(0);
+        for(int i = 0; i < players.size(); i++) {
+            if(players.get(i).getChips() > winner.getChips()) {
+                winner = players.get(i);
+            }
+        }
+        System.out.println("The winner of the game is " + winner.getName() + "!");
+        System.out.println("Thanks for playing!");
     }
 
     //Intializes the round.
@@ -85,6 +93,9 @@ public class PokerMain {
             //everybody bets the ante
             playersInRound.get(i).addChips(-ANTE);
             board.addChipsToPot(ANTE);
+            //Sets the last bet increase to -1 so the computer won't think
+            //people have checked this round when they checked last round
+            playersInRound.get(i).setLastBet(-1);
         }
     }
 
@@ -95,6 +106,7 @@ public class PokerMain {
             if(playersInRound.get(i).getLastBet() == -2) {
                 playersInRound.remove(i);
             }
+            i--;
         }
     }
 
@@ -109,9 +121,11 @@ public class PokerMain {
 
     //Sees if every player has checked.
     public static boolean allHaveChecked(ArrayList<Player> playersInRound) {
-        for(Player player : playersInRound) {
-            //if that player has not checked, return false
-            if (player.getLastBet() != 0) {
+        int chipsBetThisRound = playersInRound.get(0).getChipsBetThisRound();
+        for(int i = 0; i < playersInRound.size(); i++) {
+            //if one player has bet a different amount this round than the others or if they haven't bet this round
+            if (playersInRound.get(i).getChipsBetThisRound() != chipsBetThisRound ||
+                    playersInRound.get(i).getLastBet() == -1) {
                 return false;
             }
         }
@@ -170,28 +184,22 @@ public class PokerMain {
         //What is the minimum you can bet?
         int playerBetting = 0;
         int highestTotalBet = 0;
-        //Sets the last bet increase to -1 so the computer won't think
-        //people have checked this round when they checked last round
-        for(int i = 0; i < playersInRound.size(); i++) {
-            playersInRound.get(i).setLastBet(-1);
-        }
         //start the betting
         while(playersInRound.size() > 1 && !allHaveChecked(playersInRound) && !allInSkipBetting(playersInRound)) {
             //Gets the player to bet or fold
-            Player currPlayer =playersInRound.get(playerBetting);
+            Player currPlayer = playersInRound.get(playerBetting);
             currPlayer.getHand().setHandVisibility(true);
             PokerGraphics.dealHands(playersInRound, panel1, s);
             currPlayer.getHand().setHandVisibility(false);
             getPlayerAction(currPlayer, board, console, highestTotalBet);
             highestTotalBet = Math.max(highestTotalBet, currPlayer.getChipsBetThisRound());
-            //Goes to the next player.
-            playerBetting = getNextPlayer(playersInRound, playerBetting);
             //removes the inactive players from the playersInRound ArrayList
             updateActivePlayers(playersInRound);
-            //TEsting only
+            //Goes to the next player.
             if(allHaveChecked(playersInRound)) {
                 System.out.println("Everyone has checked, so we will move to the next round");
             }
+            playerBetting = getNextPlayer(playersInRound, playerBetting);
         }
     }
 
@@ -237,8 +245,8 @@ public class PokerMain {
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
     public static void getPlayerAction(Player player, Board board, Scanner console, int highestTotalBet) {
         System.out.println("It is " + player.getName() + "'s turn.");
-        System.out.println( player.toString());
-        System.out.println(board.toString());
+        //System.out.println( player.toString());
+        //System.out.println(board.toString());
         System.out.println("There are " + board.getPotSize() + " chips in the pot.");
         System.out.println("Type B to bet or type F to fold");
         String actionType = console.next().toUpperCase();
