@@ -55,10 +55,11 @@ public class PokerMain {
             doBettingPhase(playersInRound, board, console, panel1, s);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound, board);
-            //for(Player player : players) {
-            //    System.out.println(player);
-            //}
             //System.out.println(board);
+            for(int i = 0; i < playersInRound.size(); i++) {
+                players.get(i).getHand().setHandVisibility(true);
+            }
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound);
             System.out.println("The winner of this round is " +  roundWinner.getName() +
                     ". They get " + board.getPotSize() + " chips!");
             board.payOutPot(roundWinner);
