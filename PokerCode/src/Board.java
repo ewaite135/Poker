@@ -5,7 +5,7 @@ public class Board {
     private ArrayList<Card> commCards;
 
     public Board() {
-        commCards = new ArrayList<Card>();
+        commCards = new ArrayList<>();
     }
 
     //Resets the board (occurs at the start of every round)
@@ -13,7 +13,7 @@ public class Board {
         commCards.clear();
         chipPot = 0;
     }
-    //Adds cards to the board (when they get dealt)
+    //Adds the cards to the board (when they get dealt)
     public void addCards(ArrayList<Card> newCards) {
         commCards.addAll(newCards);
         for (int i = 0; i < commCards.size(); i++) {
@@ -44,7 +44,7 @@ public class Board {
         chipPot = 0;
     }
 
-    //Adds chips to the pot
+    //Adds the chips to the pot
     public void addChipsToPot(int chips) {
         chipPot += chips;
     }

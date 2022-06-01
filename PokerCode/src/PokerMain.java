@@ -266,7 +266,6 @@ public class PokerMain {
         System.out.println("It is " + player.getName() + "'s turn.");
         //System.out.println( player.toString());
         //System.out.println(board.toString());
-        System.out.println("There are " + board.getPotSize() + " chips in the pot.");
         System.out.println("Type B to bet or type F to fold");
         String actionType = console.next().toUpperCase();
         //Makes sure the input is B or F (can add Checking later but is already implemented in betting.)
