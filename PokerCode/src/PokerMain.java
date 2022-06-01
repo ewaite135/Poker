@@ -50,7 +50,7 @@ public class PokerMain {
             //deal the final card to the board
             board.addCards(deck.dealCards(1));
             PokerGraphics.makeBoard(s,panel1,board);
-            System.out.println(board);
+            //System.out.println(board);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //Finds and pays out the winner
@@ -58,7 +58,7 @@ public class PokerMain {
             //for(Player player : players) {
             //    System.out.println(player);
             //}
-            System.out.println(board);
+            //System.out.println(board);
             System.out.println("The winner of this round is " +  roundWinner.getName() +
                     ". They get " + board.getPotSize() + " chips!");
             board.payOutPot(roundWinner);
