@@ -107,9 +107,6 @@ public class PokerMain {
                 i--;
             }
         }
-        panel1.clear();
-        PokerGraphics.makeBoard(s,panel1,board, playersInRound);
-        PokerGraphics.dealHands(playersInRound, panel1, s);
     }
 
     //returns the index of the next active player
@@ -185,25 +182,30 @@ public class PokerMain {
                                       DrawingPanel panel1, Graphics s) {
         //What is the minimum you can bet?
         int playerBetting = 0;
-        int highestTotalBet = 0;
         //start the betting
         while(playersInRound.size() > 1 && !allHaveChecked(playersInRound) && !allInSkipBetting(playersInRound)) {
             //Gets the player to bet or fold
             Player currPlayer = playersInRound.get(playerBetting);
+            int minBet = findMinimumBet(playersInRound, currPlayer);
             currPlayer.getHand().setHandVisibility(true);
             PokerGraphics.dealHands(playersInRound, panel1, s);
             currPlayer.getHand().setHandVisibility(false);
-            getPlayerAction(currPlayer, board, console, highestTotalBet);
-            highestTotalBet = Math.max(highestTotalBet, currPlayer.getChipsBetThisRound());
+            getPlayerAction(currPlayer, board, console, minBet);
             //removes the inactive players from the playersInRound ArrayList
-            updateActivePlayers(playersInRound, board, panel1, s);
-            //Goes to the next player.
             updateActivePlayers(playersInRound, board, panel1, s);
             //Testing only
             if(allHaveChecked(playersInRound)) {
                 System.out.println("Everyone has checked, so we will move to the next round");
             }
             playerBetting = getNextPlayer(playersInRound, playerBetting);
+            panel1.clear();
+            PokerGraphics.makeBoard(s,panel1,board, playersInRound, findMinimumBet(playersInRound, playersInRound.get(playerBetting)));
+            PokerGraphics.dealHands(playersInRound, panel1, s);
+        }
+        if(allHaveChecked(playersInRound)) {
+            for(int i = 0; i < playersInRound.size(); i++) {
+                playersInRound.get(i).setLastBet(-1);
+            }
         }
     }
 
@@ -229,6 +231,18 @@ public class PokerMain {
         }
     }
 
+    public static int findMinimumBet(ArrayList<Player> playersInRound, Player currentPlayer) {
+        int highestTotalBet = 0;
+        for(Player player : playersInRound) {
+            if (player.getChipsBetThisRound() > highestTotalBet) {
+                highestTotalBet = player.getChipsBetThisRound();
+            }
+        }
+        int betMinimum = highestTotalBet - currentPlayer.getChipsBetThisRound();
+        betMinimum = Math.min(betMinimum, currentPlayer.getChips());
+        return betMinimum;
+    }
+
     public static boolean checkForNextRound(Scanner console) {
         System.out.println("Does everyone want to play another round?");
         System.out.println("Type Y for yes and N for no");
@@ -247,7 +261,7 @@ public class PokerMain {
         }
     }
     //Gets a response from the player (whether they bet, checked, or folded (and the amount if betting)
-    public static void getPlayerAction(Player player, Board board, Scanner console, int highestTotalBet) {
+    public static void getPlayerAction(Player player, Board board, Scanner console, int minimumBet) {
         System.out.println("It is " + player.getName() + "'s turn.");
         //System.out.println( player.toString());
         //System.out.println(board.toString());
@@ -262,13 +276,10 @@ public class PokerMain {
         }
         if(actionType.equals("B")) {
             //BetMinimum is the minimum you can bet
-            int betMinimum = highestTotalBet - player.getChipsBetThisRound();
-            //Makes it so that going all in can match any hand.
-            betMinimum = Math.min(betMinimum, player.getChips());
-            System.out.println("How much do you want to bet? You have to bet at least " + betMinimum + " chips.");
+            System.out.println("How much do you want to bet? You have to bet at least " + minimumBet + " chips.");
             int betAmount = console.nextInt();
-            while (betAmount < betMinimum || betAmount > player.getChips()) {
-                System.out.println("Please bet an amount between " + betMinimum + " and your current chips (" + player.getChips() + ").");
+            while (betAmount < minimumBet || betAmount > player.getChips()) {
+                System.out.println("Please bet an amount between " + minimumBet + " and your current chips (" + player.getChips() + ").");
                 betAmount = console.nextInt();
             }
             player.addChips(-betAmount);

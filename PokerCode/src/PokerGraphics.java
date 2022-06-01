@@ -6,8 +6,11 @@ public class PokerGraphics {
     public static void main(String[] args) {
     }
 
-    // Draws an image of the playing board.
     public static void makeBoard(Graphics s, DrawingPanel panel1, Board board, ArrayList<Player> playersInRound) {
+        makeBoard(s,panel1,board, playersInRound, 0);
+    }
+    // Draws an image of the playing board.
+    public static void makeBoard(Graphics s, DrawingPanel panel1, Board board, ArrayList<Player> playersInRound, int minBet) {
         Color boardGreen = new Color(10,100,10);
         panel1.setBackground(boardGreen);
         s.setColor(Color.LIGHT_GRAY);
@@ -24,7 +27,8 @@ public class PokerGraphics {
         Font z = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 6));
         s.setFont(z);
         s.drawString("Pot size: " + board.getPotSize() + " chips.", panel1.getWidth() / 2 - CARD_SIZE + 5, panel1.getHeight() / 2 + CARD_SIZE + CARD_SIZE/7 );
-        s.drawString("Current bet: " + playersInRound.get(0).getLastBet() + " chips.", panel1.getWidth() / 2 - CARD_SIZE + 5, panel1.getHeight() / 2 + CARD_SIZE + (int)(CARD_SIZE/3.5));
+        //TODO: change the current bet value to the minimum bet.
+        s.drawString("Current bet: " +  minBet+ " chips.", panel1.getWidth() / 2 - CARD_SIZE + 5, panel1.getHeight() / 2 + CARD_SIZE + (int)(CARD_SIZE/3.5));
 
 
 
