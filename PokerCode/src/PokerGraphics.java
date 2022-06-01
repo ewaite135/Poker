@@ -34,14 +34,14 @@ public class PokerGraphics {
             s.setColor(Color.BLACK);
             s.drawRect(panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + i, panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) - 2 * i, CARD_SIZE, (int)(CARD_SIZE * 1.4));
             s.drawOval(panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int)(CARD_SIZE * 0.1) + i, panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE*0.1) - 2 * i,(int) (CARD_SIZE * 0.8), (int) (CARD_SIZE * 1.4 * 0.85));
-            Font g = new Font("Helvetica", Font.ITALIC, (int) (CARD_SIZE / 6));
-            Font h = new Font("Helvetica", Font.ITALIC, (int) (CARD_SIZE / 10));
+            Font g = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 6));
+            Font h = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 10));
             s.setFont(h);
-            s.drawString("Rowan & Eli\'s",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int) (CARD_SIZE/5.5) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/3*1.4) - 2 * i);
+            s.drawString("Rowan & Eli's",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int) (CARD_SIZE/5.5) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/3*1.4) - 2 * i);
             s.setFont(g);
-            s.drawString("Texas",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int) (CARD_SIZE/4) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/2.25*1.4) - 2 * i);
+            s.drawString("Texas",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (CARD_SIZE/4) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/2.25*1.4) - 2 * i);
             s.drawString("Hold",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int) (CARD_SIZE/3.3) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/1.7*1.4) - 2 * i);
-            s.drawString("\'Em",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (int) (CARD_SIZE/3) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/2*1.4 + CARD_SIZE/4.5*1.4) - 2 * i);
+            s.drawString("'Em",panel1.getWidth() / 2 + -3 * (CARD_SIZE + CARD_SIZE / 6) + (CARD_SIZE/3) + i,panel1.getHeight() / 2 - (int) (CARD_SIZE * 0.7) + (int) (CARD_SIZE/2*1.4 + CARD_SIZE/4.5*1.4) - 2 * i);
         }
     }
 
@@ -120,11 +120,11 @@ public class PokerGraphics {
         } else {
             s.drawOval(x + (int)(size * 0.1), y + (int) (size*0.1),(int) (size * 0.8), (int) (size * 1.4 * 0.85));
             s.setFont(h);
-            s.drawString("Rowan & Eli\'s",x + (int) (size/5.5),y + (int) (size/3*1.4));
+            s.drawString("Rowan & Eli's",x + (int) (size/5.5),y + (int) (size/3*1.4));
             s.setFont(g);
             s.drawString("Texas",x + (int) (size/4),y + (int) (size/2.25*1.4));
             s.drawString("Hold",x + (int) (size/3.3),y + (int) (size/1.7*1.4));
-            s.drawString("\'Em",x + (int) (size/3),y + (int) (size/2*1.4 + size/4.5*1.4));
+            s.drawString("'Em",x + (int) (size/3),y + (int) (size/2*1.4 + size/4.5*1.4));
 
         }
     }
@@ -132,18 +132,18 @@ public class PokerGraphics {
     public static void dealHands (ArrayList<Player> players, DrawingPanel panel1, Graphics s) {
         int numPlayers = players.size();
         for (int i = 0; i < numPlayers/2; i++) {
-            drawHand(players.get(i), (panel1.getWidth() / ((numPlayers/2) + 1)) + i * (panel1.getWidth() / ((numPlayers/2) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() / 20), panel1, s);
+            drawHand(players.get(i), (panel1.getWidth() / ((numPlayers/2) + 1)) + i * (panel1.getWidth() / ((numPlayers/2) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() / 20), s);
         }
 
         for (int i = 0; i < (int)Math.round(numPlayers/2.0); i++) {
-            drawHand(players.get(i + numPlayers/2 ), (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) + i  * (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() * 7/9), panel1, s);
+            drawHand(players.get(i + numPlayers/2 ), (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) + i  * (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() * 7/9), s);
         }
     }
 
-    public static void drawHand (Player player, int x, int y, DrawingPanel panel1, Graphics s) {
+    public static void drawHand (Player player, int x, int y, Graphics s) {
         drawCard(player.getHand().getCard(0),x ,y, CARD_SIZE, s);
         drawCard(player.getHand().getCard(1),x + (CARD_SIZE + CARD_SIZE/6) ,y, CARD_SIZE, s);
-        Font g = new Font("Helvetica", Font.ITALIC, (int) (CARD_SIZE / 6));
+        Font g = new Font("Helvetica", Font.ITALIC, (CARD_SIZE / 6));
         s.setColor(Color.GRAY);
         s.fillRect(x - 5, y + ((int)(CARD_SIZE * 1.42)), (CARD_SIZE * 2 + CARD_SIZE/6), CARD_SIZE/6);
         s.setFont(g);
