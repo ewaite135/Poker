@@ -32,20 +32,19 @@ public class PokerMain {
             round++;
             //Start new round
             startRound(players, playersInRound, deck, board);
-            PokerGraphics.dealHands(players, panel1, s);
+            panel1.clear();
             PokerGraphics.makeBoard(s,panel1,board);
+            PokerGraphics.dealHands(playersInRound, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 3 cards to the board
             board.addCards(deck.dealCards(3));
             PokerGraphics.makeBoard(s,panel1,board);
-            PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 1 cards to the board
             board.addCards(deck.dealCards(1));
             PokerGraphics.makeBoard(s,panel1,board);
-            PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
             doBettingPhase(playersInRound, board, console, panel1, s);
             //deal the final card to the board
@@ -78,7 +77,7 @@ public class PokerMain {
         System.out.println("Thanks for playing!");
     }
 
-    //Intializes the round.
+    //Initializes the round.
     // Resets the active player list, shuffles the deck and deals cards, and bets the ante for everyone
     public static void startRound(ArrayList<Player> players, ArrayList<Player> playersInRound, Deck deck, Board board) {
         playersInRound.clear();
@@ -99,15 +98,18 @@ public class PokerMain {
         }
     }
 
-    //removes all of the players that have folded from the Array of active players that round.
-    public static void updateActivePlayers(ArrayList<Player> playersInRound) {
+    //removes all the players that have folded from the Array of active players that round.
+    public static void updateActivePlayers(ArrayList<Player> playersInRound,Board board, DrawingPanel panel1, Graphics s) {
         for(int i = 0; i < playersInRound.size(); i++) {
             //If that player has folded, remove them
             if(playersInRound.get(i).getLastBet() == -2) {
                 playersInRound.remove(i);
+                i--;
             }
-            i--;
         }
+        panel1.clear();
+        PokerGraphics.makeBoard(s,panel1,board);
+        PokerGraphics.dealHands(playersInRound, panel1, s);
     }
 
     //returns the index of the next active player
@@ -194,8 +196,10 @@ public class PokerMain {
             getPlayerAction(currPlayer, board, console, highestTotalBet);
             highestTotalBet = Math.max(highestTotalBet, currPlayer.getChipsBetThisRound());
             //removes the inactive players from the playersInRound ArrayList
-            updateActivePlayers(playersInRound);
+            updateActivePlayers(playersInRound, board, panel1, s);
             //Goes to the next player.
+            updateActivePlayers(playersInRound, board, panel1, s);
+            //Testing only
             if(allHaveChecked(playersInRound)) {
                 System.out.println("Everyone has checked, so we will move to the next round");
             }
@@ -203,7 +207,7 @@ public class PokerMain {
         }
     }
 
-    //Compares everyone's hands and returns the player with the best hand (whose the winner of the round)
+    //Compares everyone's hands and returns the player with the best hand (who's the winner of the round)
     public static Player findWinner(ArrayList<Player> playersInRound, Board board) {
         int highestHandIndex = 0;
         double highestHandVal = 0;

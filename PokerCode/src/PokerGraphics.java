@@ -3,11 +3,7 @@ import java.util.ArrayList;
 
 public class PokerGraphics {
     public static final int CARD_SIZE = 100;
-    public static final int PANEL_WIDTH = 1000;
-
     public static void main(String[] args) {
-        DrawingPanel panel1 = new DrawingPanel(PANEL_WIDTH,(int) (PANEL_WIDTH * 0.6));
-        Graphics s = panel1.getGraphics();
     }
 
     // Draws an image of the playing board.
@@ -20,8 +16,6 @@ public class PokerGraphics {
             if (board.getCards().size() > 0 && i < board.getCards().size() - 3) {
                 drawCard(board.getCards().get(i+3),panel1.getWidth() / 2 + (i + 1) * (CARD_SIZE + CARD_SIZE / 6),panel1.getHeight() / 2 - (int)(CARD_SIZE * 0.7), CARD_SIZE, s);
             }
-
-            //Just run the makeBoard method every time a new round starts, after the cards are added to the commCards in PokerMain
         }
         s.drawOval((panel1.getWidth() / 8),panel1.getHeight() / 4,(panel1.getWidth() * 6/8),panel1.getHeight() / 2);
 
@@ -134,7 +128,6 @@ public class PokerGraphics {
         for (int i = 0; i < numPlayers/2; i++) {
             drawHand(players.get(i), (panel1.getWidth() / ((numPlayers/2) + 1)) + i * (panel1.getWidth() / ((numPlayers/2) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() / 20), s);
         }
-
         for (int i = 0; i < (int)Math.round(numPlayers/2.0); i++) {
             drawHand(players.get(i + numPlayers/2 ), (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) + i  * (int)(panel1.getWidth() / (Math.round(numPlayers/2.0) + 1)) - (CARD_SIZE + CARD_SIZE/6),(panel1.getHeight() * 7/9), s);
         }
