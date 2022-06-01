@@ -35,25 +35,25 @@ public class PokerMain {
             PokerGraphics.dealHands(players, panel1, s);
             PokerGraphics.makeBoard(s,panel1,board);
             //Continues betting until everyone has folded or checked
-            doBettingPhase(playersInRound, board, console);
+            doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 3 cards to the board
             board.addCards(deck.dealCards(3));
             PokerGraphics.makeBoard(s,panel1,board);
             PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
-            doBettingPhase(playersInRound, board, console);
+            doBettingPhase(playersInRound, board, console, panel1, s);
             //deal 1 cards to the board
             board.addCards(deck.dealCards(1));
             PokerGraphics.makeBoard(s,panel1,board);
             PokerGraphics.dealHands(players, panel1, s);
             //Continues betting until everyone has folded or checked
-            doBettingPhase(playersInRound, board, console);
+            doBettingPhase(playersInRound, board, console, panel1, s);
             //deal the final card to the board
             board.addCards(deck.dealCards(1));
             PokerGraphics.makeBoard(s,panel1,board);
             System.out.println(board);
             //Continues betting until everyone has folded or checked
-            doBettingPhase(playersInRound, board, console);
+            doBettingPhase(playersInRound, board, console, panel1, s);
             //Finds and pays out the winner
             Player roundWinner = findWinner(playersInRound, board);
             for(Player player : players) {
@@ -165,7 +165,8 @@ public class PokerMain {
     }
 
     //Does the whole betting phase until everyone checks or someone folds.
-    public static void doBettingPhase(ArrayList<Player> playersInRound, Board board, Scanner console) {
+    public static void doBettingPhase(ArrayList<Player> playersInRound, Board board, Scanner console,
+                                      DrawingPanel panel1, Graphics s) {
         //What is the minimum you can bet?
         int playerBetting = 0;
         int highestTotalBet = 0;
@@ -177,8 +178,12 @@ public class PokerMain {
         //start the betting
         while(playersInRound.size() > 1 && !allHaveChecked(playersInRound) && !allInSkipBetting(playersInRound)) {
             //Gets the player to bet or fold
-            getPlayerAction(playersInRound.get(playerBetting), board, console, highestTotalBet);
-            highestTotalBet = Math.max(highestTotalBet, playersInRound.get(playerBetting).getChipsBetThisRound());
+            Player currPlayer =playersInRound.get(playerBetting);
+            currPlayer.getHand().setHandVisibility(true);
+            PokerGraphics.dealHands(playersInRound, panel1, s);
+            currPlayer.getHand().setHandVisibility(false);
+            getPlayerAction(currPlayer, board, console, highestTotalBet);
+            highestTotalBet = Math.max(highestTotalBet, currPlayer.getChipsBetThisRound());
             //Goes to the next player.
             playerBetting = getNextPlayer(playersInRound, playerBetting);
             //removes the inactive players from the playersInRound ArrayList

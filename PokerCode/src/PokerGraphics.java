@@ -3,9 +3,10 @@ import java.util.ArrayList;
 
 public class PokerGraphics {
     public static final int CARD_SIZE = 100;
+    public static final int PANEL_WIDTH = 1000;
 
     public static void main(String[] args) {
-        DrawingPanel panel1 = new DrawingPanel(1000,600);
+        DrawingPanel panel1 = new DrawingPanel(PANEL_WIDTH,(int) (PANEL_WIDTH * 0.6));
         Graphics s = panel1.getGraphics();
     }
 
